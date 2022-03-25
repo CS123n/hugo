@@ -1,0 +1,2141 @@
+<rss version="2.0">
+<channel>
+
+<item>
+  <title>自然语言处理</title>
+  <link>https://www.liulp.club/2021/12/nlp_python/</link>
+    <description>&lt;!--toc--&gt;
+&lt;h2 id=&#34;基础知识&#34;&gt;基础知识&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;特高频特低频词都不能用于分析语言风格&lt;/li&gt;
+&lt;li&gt;高频长词，连词搭配可以分析风格&lt;/li&gt;
+&lt;li&gt;语言理解技术：词义消歧，指代消歧&lt;/li&gt;
+&lt;li&gt;语言理解应用：机器翻译（MT），含义识别（RTE）&lt;/li&gt;
+&lt;li&gt;nltk.Text():
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;方法&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;作用&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;Text(words)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;对象构造&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;concordance(word, width=79, lines=25)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示word出现的上下文&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;common_contexts(words)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示words出现的相同模式&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;similar(word)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示word的相似词&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;collocations(num=20, window_size=2)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示最常见的二词搭配&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;count(word)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;word出现的词数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;dispersion_plot(words)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;绘制words中文档中出现的位置图&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;vocab()&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;返回文章去重的词典&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;GB2312，Latin-2，UTF-8是对应Unicode的一部分&lt;/li&gt;
+&lt;li&gt;正则匹配：
+^ 匹配开始，$ 匹配结尾，? 前方可选，. 匹配任意1个，+ 前方一个或多个，* 前方零个或多个，{m,n} 至少重复m次不多于n次
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;操作符&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;行为&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;[abc]&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;匹配字符集合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ed|ing&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;匹配指定的字符串（析取）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;a(b|c)+&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;括号表示操作符的范围&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;辅音元音序列，从中可以看出s和t后元音的分布几乎是互补的：
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;a&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;e&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;i&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;o&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;u&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;s&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;100&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;t&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;47&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;148&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;37&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;词干提取：lying -&amp;gt; lie （会产生非词）；词形归并：women -&amp;gt; woman；非标准词：数字、缩写、日期&lt;/li&gt;
+&lt;li&gt;正则简写：[a-zA-Z0-9_] = \w、[ \t\n] = \s&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;词性标注&#34;&gt;词性标注&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;词性标记集：adj，adv，cnj连词，det限定词 ……&lt;/li&gt;
+&lt;li&gt;使用out of vocabulary (UNK)替换超出词汇&lt;/li&gt;
+&lt;li&gt;简单词性标注：默认标注 &amp;lt;- 正则标注 &amp;lt;- 查询标注&lt;/li&gt;
+&lt;li&gt;一个语料库出现的新词大多数是名词，且一个语料库中最多的往往也是名词，所以一般将名词作为默认值&lt;/li&gt;
+&lt;li&gt;频率标注：1-gram unigram、2-gram bigram、3-gram trigram，n-gram标注器中n大于3时，面临数据稀疏问题&lt;/li&gt;
+&lt;li&gt;为了防止多词查询跨句，在句子开始处加None&lt;/li&gt;
+&lt;li&gt;标注策略失败要回退上级策略，直至默认标注&lt;/li&gt;
+&lt;li&gt;给定当前单词及其前两个标记，在约5%的情况中，有一个以上的标记分配给当前词&lt;/li&gt;
+&lt;li&gt;修正标注（Brill）：基于规则不断修正&lt;/li&gt;
+&lt;li&gt;语言学家使用形态学、句法和语义线索确定一个词的类别&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;文本分类&#34;&gt;文本分类&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;训练数据分为：train、dev-test、test三部分&lt;/li&gt;
+&lt;li&gt;最大熵马尔可夫模型和线性链条件随机场模型&lt;/li&gt;
+&lt;li&gt;任务：姓名性别识别，对话行为分类，句子分割，文本蕴含判断&lt;/li&gt;
+&lt;li&gt;精确度= true &amp;amp; positive / positive，召回率 = true &amp;amp; positive / true&lt;/li&gt;
+&lt;li&gt;交叉验证：将原始语料分为N个子集（folds）。对于每一个折叠，我们使用除这个折叠中的数据外所有数据来训练模型，然后在这个折叠上测试模型&lt;/li&gt;
+&lt;li&gt;决策树：
+&lt;ul&gt;
+&lt;li&gt;信息增益：得到某个信息后熵的减少&lt;/li&gt;
+&lt;li&gt;底层节点样本太少：设置停止阈值 or 对低性能节点进行裁剪&lt;/li&gt;
+&lt;li&gt;特征按照顺序处理，难以处理相互独立多特征的情况&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;朴素贝叶斯：
+&lt;ul&gt;
+&lt;li&gt;假设：特征相互独立&lt;/li&gt;
+&lt;li&gt;零计数和平滑：对于未出现、低频率的分类进行平滑，提升重要性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;最大熵分类：
+&lt;ul&gt;
+&lt;li&gt;假设：满足所有约束条件，分布越平均熵越大越好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;信息提取&#34;&gt;信息提取&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;名词短语分块（NP-chunking）：
+&lt;ul&gt;
+&lt;li&gt;可选的跟着任意数目形容词（JJ）的限定词（DT）和名词（NN）组成&lt;/li&gt;
+&lt;li&gt;IOB标记：I（inside），O（outside）或Ｂ（begin）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/1638333240403np-chunking.png class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VP分块，如has already delivered；PP分块，如because of&lt;/li&gt;
+&lt;li&gt;命名实体识别：组织，人，地点，日期，货币，设施，地缘政治实体&lt;/li&gt;
+&lt;li&gt;有了明确的命名实体就可以进行关系抽取&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;句子结构&#34;&gt;句子结构&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;歧义句子：While hunting in Africa, &lt;strong&gt;I shot an elephant in my pajamas.&lt;/strong&gt; How an elephant got into my pajamas I’ll never know.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/1638333151590ambiguous.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;and不能连接NP和AP，e.g., It is the worst part and clumsy looking.&lt;/li&gt;
+&lt;li&gt;解析器：下降递归分析、移进-归约分析、左角落分析（带自下而上过滤的自上而下的方法）、图表分析（动态规划）&lt;/li&gt;
+&lt;li&gt;左角落分析：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/1638333218583left-corner_table.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;图表分析（动态规划）：
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; tokens &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;I shot an elephant in my pajamas&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split()
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; wfst0 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; init_wfst(tokens, groucho_grammar)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; wfst1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; complete_wfst(wfst0, tokens, groucho_grammar)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; display(wfst1, tokens)
+WFST  &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;   &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;     &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;　  NP   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   S　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   S
+&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   V　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　  VP　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　  VP
+&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   Det　  NP　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   N　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   P　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　  PP
+&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　 Det　  NP
+&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   N
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;依存关系的表示：(shot I (elephant an (in (pajamas my))))、(shot I (elephant an) (in (pajamas my)))&lt;/li&gt;
+&lt;li&gt;动词及物or不及物称为动词的配价&lt;/li&gt;
+&lt;li&gt;随着句子的增长，歧义是爆炸式增长的。因此需要加权文法，即为每一个分叉分配概率，且加和为1&lt;/li&gt;
+&lt;/ul&gt;</description>
+  <pubDate>Wed, 01 Dec 2021 12:11:00 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/12/nlp_python/</guid>
+</item>
+
+<item>
+  <title>科目一备考</title>
+  <link>https://www.liulp.club/2021/11/driver1/</link>
+    <description>&lt;p&gt;期中加上科目一忙碌又充实，马上ICLR就要出评审了紧张又刺激。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;科目一1&#34;&gt;科目一1&lt;/h2&gt;
+&lt;h3 id=&#34;驾驶证&#34;&gt;驾驶证&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;申请年限:18 -&amp;gt; ∞，有限期: 6 -&amp;gt; 10 -&amp;gt; ∞&lt;/li&gt;
+&lt;li&gt;科一准考证3年，延期审验3年，实习期(12个月)高速三年老司机，有效期前90天可换,&lt;/li&gt;
+&lt;li&gt;科二科三预约最多5次，科二科三没有分数&lt;/li&gt;
+&lt;li&gt;大中客车牵引车，无首次申领，驾驶人每年提供身体条件证明&lt;/li&gt;
+&lt;li&gt;违法行为，刑事责任，全部责任&lt;/li&gt;
+&lt;li&gt;车除防撞登记，证核发地(车辆管理所)补发，换证随意&lt;/li&gt;
+&lt;li&gt;证超一年被注销，未超2年重考安全法律法规(科目一)&lt;/li&gt;
+&lt;li&gt;假1骗(撤)3毒3醉5逃罪终身&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;灯光&#34;&gt;灯光&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;夜间非正常(过路口)，超车，提醒 远光交替远近&lt;/li&gt;
+&lt;li&gt;有人有车换近光，会车150米换&lt;/li&gt;
+&lt;li&gt;雾天 开雾灯&lt;/li&gt;
+&lt;li&gt;临时停车，故障，雾天，牵引故障车 开双闪&lt;/li&gt;
+&lt;li&gt;环岛只有出的时候 开右转灯&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;速度&#34;&gt;速度&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;冰雪泥泞，雾雨雪沙，能见度小于50，掉头转弯下坡，铁路道口急转弯窄路窄桥 一律30公里/小时&lt;/li&gt;
+&lt;li&gt;高速能见度 26十 14五 52离，高速正常100公里50/100米距离&lt;/li&gt;
+&lt;li&gt;高速三车道右到左 6-9 9-11 11-12 二车道 6-10 10-12&lt;/li&gt;
+&lt;li&gt;标识牌 红高蓝低黄建议，印记 黄高白低&lt;/li&gt;
+&lt;li&gt;城3公4，城5公7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;特殊天气&#34;&gt;特殊天气&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;雨冰雪滑制动，雪天车辙，泥泞车轮&lt;/li&gt;
+&lt;li&gt;雾天雾灯，雾天夜晚能见度，回应喇叭、&lt;/li&gt;
+&lt;li&gt;水淹路面观察路面，涉水间断轻踏&lt;/li&gt;
+&lt;li&gt;困难/无法就停车，特殊情况发动机制动减速，而非紧急制动&lt;/li&gt;
+&lt;li&gt;坚实路面，缓慢通过，大安全距离 -&amp;gt; 小心无大错&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;安全常识&#34;&gt;安全常识&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;ABS车轮防抱死，用于紧急制动保持转向能力&lt;/li&gt;
+&lt;li&gt;安全头枕保护颈部&lt;/li&gt;
+&lt;li&gt;安全带减轻对驾乘人员伤害，安全气囊辅助可充气约束系统，带囊73分&lt;/li&gt;
+&lt;li&gt;安全带前后排大人小孩都要系，连续4小时休息20分钟&lt;/li&gt;
+&lt;li&gt;车门车厢没关，悬挂防止妨碍驾驶人视线，接听手持电话，观看电视，熄火空挡惯性滑行，路上抛洒物品&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;仪表指示灯&#34;&gt;仪表指示灯&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;100以上速度，8找发动机转速，儿童儿童安全锁，太阳车灯总开关&lt;/li&gt;
+&lt;li&gt;lock切断电源，acc连通附件电源，on除起动机外电源，start起动机电源 顺时针&lt;/li&gt;
+&lt;li&gt;光灯远平进斜，雾灯前绿后黄，刮水前扇后方&lt;/li&gt;
+&lt;li&gt;双灯示廓灯，P制动，三角危险报警闪光，！制动故障，abs防抱死故障，电池充电电路故障&lt;/li&gt;
+&lt;li&gt;水壶机油不足or压力低，方形水箱冷却液不足，水龙头发动机系统故障&lt;/li&gt;
+&lt;li&gt;离合刹车油门，变速器，制动器，左灯右水，上右下左&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;交警手势&#34;&gt;交警手势&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看见手心找停止，两手伸直找直行，捂住胸口找变道，摸到伞杆找待转&lt;/li&gt;
+&lt;li&gt;一只手低找减速，两只手高低找转弯，转弯方向同低手&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;科目一2&#34;&gt;科目一2&lt;/h2&gt;
+&lt;h3 id=&#34;扣分&#34;&gt;扣分&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;不按规定会车、使用灯光，未带驾驶证 &lt;strong&gt;1分&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;打电话，高速快速路未系安全带（其他只罚款50），交叉路口停车，借道占用对方车道穿插 &lt;strong&gt;2分&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;违反禁令标志，故障没按规定，普通道路逆行，不按规定年检，超速10-20% &lt;strong&gt;3分&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;应急车道占用，没按规定避让校车，没遵守交通信号灯，高速能见度不按规定，超速20-50% &lt;strong&gt;6分&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;遮挡污损伪造号牌，伪造变造驾驶证行驶证，驾驶车型不符，超速50%以上，高速倒车逆行，饮酒驾驶，交通事故逃逸 &lt;strong&gt;12分&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;扣车证人&#34;&gt;扣车证人&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;驾驶证行驶证，保险检验标志，车牌 扣车&lt;/li&gt;
+&lt;li&gt;扣留行驶证，必带身份证错&lt;/li&gt;
+&lt;li&gt;有钱的拘留对，无钱拘留错&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;处罚&#34;&gt;处罚&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;先罚款后吊销驾驶证，暂扣的15日以下拘留&lt;/li&gt;
+&lt;li&gt;实习期上高速处20-200罚款&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;判刑&#34;&gt;判刑&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;重大事故重伤死亡，3年一下或拘役；且逃逸，3-7年；逃逸致人死亡，7年以上&lt;/li&gt;
+&lt;li&gt;有拘役选拘役，有期徒刑结尾错&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;罚款&#34;&gt;罚款&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;罚款技巧，20元不选&lt;/li&gt;
+&lt;li&gt;逃逸，非法拦截扣留，私按报警器，罚款200-2000&lt;/li&gt;
+&lt;li&gt;逾期不审验驾驶，罚款200-500&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;事故处理&#34;&gt;事故处理&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;无争议无伤亡，撤离现场，自行协商&lt;/li&gt;
+&lt;li&gt;有争议，有伤亡，有喝酒，有违法行为，立刻报警&lt;/li&gt;
+&lt;li&gt;警察有权责令撤离&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;救援&#34;&gt;救援&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;避免二次受伤，疏散报警&lt;/li&gt;
+&lt;li&gt;有害气体，捂住口鼻，找新鲜口气&lt;/li&gt;
+&lt;li&gt;抢救先看呼吸，心肺复苏100-120/分钟&lt;/li&gt;
+&lt;li&gt;烫伤救人要喷水，流血先止血近心端、要保暖，骨折硬担架、固定、不随意移动&lt;/li&gt;
+&lt;li&gt;立即拉拽，仰卧位置，原地等待不行&lt;/li&gt;
+&lt;li&gt;先救命后救伤&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?%e7%a7%91%e7%9b%ae%e4%b8%80.mp4&amp;mp4&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;</description>
+  <pubDate>Thu, 04 Nov 2021 19:29:56 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/11/driver1/</guid>
+</item>
+
+<item>
+  <title>Homeassistant</title>
+  <link>https://www.liulp.club/2021/08/homeassistant/</link>
+    <description>&lt;p&gt;在Openwrt上搭建Homeassistant，目标是实现低成本可扩展的智能家居系统。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;安装hacs&#34;&gt;安装Hacs&lt;/h2&gt;
+&lt;p&gt;因为Homeassistant的集成是需要审核通过的，很多开源的集成是没有加入的。所以推荐安装&lt;code&gt;Hacs&lt;/code&gt;，它拥有更大的集成市场。官方推荐的安装方法是直接进入容器，运行命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget -q -O - https://install.hacs.xyz | bash -
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;但是我的docker内的网络并不能正确访问外网。通过分析代码发现，可以直接在Homeassistant的外部目录下运行脚本安装，从而不需要进入容器。其中，需要添加Homeassistant的目录到脚本的目录声明中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;declare -a paths&lt;span style=&#34;color:#f92672&#34;&gt;=(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/root/homeassistant/config&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我的是/root/homeassistant/config。设置好后直接运行脚本。重启Homeassistant之后，就可以在集成中搜索到&lt;code&gt;Hacs&lt;/code&gt;了。这里需要注意的是，它自带的Github api有次数限制，建议直接在configuration.yaml中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;hacs:
+    token: 自己申请的Github token
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;就可以避开这一限制了。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://hacs.xyz/&#34;&gt;Hacs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/settings/tokens&#34;&gt;Github token&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;彩云天气&#34;&gt;彩云天气&lt;/h3&gt;
+&lt;p&gt;我使用&lt;code&gt;Hacs&lt;/code&gt;添加了彩云天气的集成，彩云天气的api我早有申请，这次就直接用上了。彩云天气可以方便地根据经纬度坐标添加多地的天气预报，很符合我这种异地上学的人的需求。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://dashboard.caiyunapp.com/user/sign_in/&#34;&gt;彩云天气&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;小米云服务&#34;&gt;小米云服务&lt;/h3&gt;
+&lt;p&gt;在&lt;code&gt;Hacs&lt;/code&gt;的集成中，我还找到了一个有意思的小米云服务，小米手机开启手机找回功能后，就可以通过集成这个服务，来定位手机，可以说非常的方便，也免去了很多Homeassistant实现相同功能需要的权限申请。&lt;/p&gt;
+&lt;h3 id=&#34;百度地图&#34;&gt;百度地图&lt;/h3&gt;
+&lt;p&gt;虽然Homeassistant自带了地图组件，但是在国内地图信息实在是令人不敢恭维。所以，有人设计了使用百度地图替代官方地图的集成，这一集成我并没有在&lt;code&gt;Hacs&lt;/code&gt;中找到，建议直接从Github上下载安装到custom_components目录下。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/shaonianzhentan/ha_baidu_map&#34;&gt;ha_baidu_map&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;添加mqtt&#34;&gt;添加MQTT&lt;/h2&gt;
+&lt;p&gt;通过之前已经通过docker安装了MQTT服务器，我们直接在Homeassistant集成中添加MQTT服务，并输入对应的ip地址和端口，因为是内网服务，所以我就没有设置账户密码，直接留空。&lt;/p&gt;
+&lt;h2 id=&#34;编写nodemcu程序&#34;&gt;编写Nodemcu程序&lt;/h2&gt;
+&lt;p&gt;有了MQTT服务以后，就可以通过MQTT添加Nodemcu等esp8266开发板，实现低成本的智能家居方案。&lt;/p&gt;
+&lt;h3 id=&#34;温湿度计&#34;&gt;温湿度计&lt;/h3&gt;
+&lt;p&gt;我首先在一个Nodemcu开发板上连上了一个SHTC3温湿度传感器，效果如下。然后编写了代码，烧录入Nodemcu，完整代码见附录&lt;a href=&#34;#%E6%B8%A9%E6%B9%BF%E5%BA%A6%E8%AE%A1%E4%BB%A3%E7%A0%81&#34;&gt;1&lt;/a&gt;。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108041534836.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;红外遥控&#34;&gt;红外遥控&lt;/h3&gt;
+&lt;p&gt;另外，通过非常好用的&lt;code&gt;IRremoteESP8266&lt;/code&gt;这个库，我们可以方便地配置发射红外信号。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;通过对MQTT信号的读取和处理，实现了远程红外遥控器。具体涉及到信号的读取，将byte转化为string。&lt;/li&gt;
+&lt;li&gt;红外信号的发射，通过&lt;code&gt;IRremoteESP8266&lt;/code&gt;发射对应的红外信号，我家用的是格力的空调，对应可以使用&lt;code&gt;ir_Kelvinator&lt;/code&gt;库。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;完整代码见附录&lt;a href=&#34;#%E6%A0%BC%E5%8A%9B%E9%81%A5%E6%8E%A7%E5%99%A8%E4%BB%A3%E7%A0%81&#34;&gt;2&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;路由器&#34;&gt;路由器&lt;/h2&gt;
+&lt;p&gt;Homeassistant支持添加路由器监控，对于我使用的Openwrt的路由器，可以在路由器上安装luci-mod-rpc。然后在configuration.yaml添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;device_tracker:
+    - platform: luci
+        host: 172.17.0.1
+        username: 
+        password: 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启Homeassistant就可以看到路由器上的设备了。还可以通过配置known_devices.yaml文件，为对应的设备添加设备名称等等。&lt;/p&gt;
+&lt;h2 id=&#34;lovelace&#34;&gt;Lovelace&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Hacs&lt;/code&gt;不仅仅有丰富的集成，还提供了很多好卡的ui元素，我比较喜欢一款叫clear的主题。启用&lt;code&gt;Hacs&lt;/code&gt;中的主题需要在configuration.yaml添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;frontend:
+    themes: !include_dir_merge_named themes
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;另外，还可以通过 左边栏姓名 $\to$ 排序和隐藏侧边栏中的项目 来重新排列或隐藏左边栏的项目。&lt;/p&gt;
+&lt;p&gt;当当当当，最终的完整效果如下&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108041515009.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;附录&#34;&gt;附录&lt;/h2&gt;
+&lt;h3 id=&#34;温湿度计代码&#34;&gt;温湿度计代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;Arduino.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;SparkFun_SHTC3.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;EspMQTTClient.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define PIN_HONG 13
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define PIN_WEN 9
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+EspMQTTClient &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;(
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RM2100&amp;#34;&lt;/span&gt;,          &lt;span style=&#34;color:#75715e&#34;&gt;// wifi名
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,                &lt;span style=&#34;color:#75715e&#34;&gt;// wifi密码
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.2.110&amp;#34;&lt;/span&gt;,   &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT Broker server ip
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,                &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT账户名
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,                &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT密码
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mqtt01-aweoif&amp;#34;&lt;/span&gt;,   &lt;span style=&#34;color:#75715e&#34;&gt;// 设备自定义名
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;1883&lt;/span&gt;               &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT端口
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;);
+
+SHTC3 mySHTC3;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;float&lt;/span&gt; RH,T;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; temp[&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;empty&amp;#34;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setup&lt;/span&gt;() {
+  &lt;span style=&#34;color:#75715e&#34;&gt;// put your setup code here, to run once:
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  Serial.begin(&lt;span style=&#34;color:#ae81ff&#34;&gt;115200&lt;/span&gt;);
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;(Serial &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; false){delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);};
+  
+  mySHTC3.begin();
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+
+  client.enableDebuggingMessages(); &lt;span style=&#34;color:#75715e&#34;&gt;// Enable debugging messages sent to serial output
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  client.enableHTTPWebUpdater(); &lt;span style=&#34;color:#75715e&#34;&gt;// Enable the web updater. User and password default to values of MQTTUsername and MQTTPassword. These can be overrited with enableHTTPWebUpdater(&amp;#34;user&amp;#34;, &amp;#34;password&amp;#34;).
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  client.enableLastWillMessage(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;TestClient/lastwill&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;I am going offline&amp;#34;&lt;/span&gt;);  &lt;span style=&#34;color:#75715e&#34;&gt;// You can activate the retain flag by setting the third parameter to true
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;loop&lt;/span&gt;() {
+  client.loop();
+&lt;span style=&#34;color:#75715e&#34;&gt;//  温湿度传感器
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(millis()&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;20000&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;){
+    SHTC3_Status_TypeDef result &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mySHTC3.update();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(mySHTC3.lastStatus &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; SHTC3_Status_Nominal)   &lt;span style=&#34;color:#75715e&#34;&gt;//判断SHTC3状态
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    {
+      RH &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mySHTC3.toPercent();   &lt;span style=&#34;color:#75715e&#34;&gt;//读取湿度数据                       
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      T &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mySHTC3.toDegC();       &lt;span style=&#34;color:#75715e&#34;&gt;//读取温度数据   
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      Serial.print(RH);
+      Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  &amp;#34;&lt;/span&gt;);
+      Serial.println(T);      
+      snprintf(temp,&lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%.1f&amp;#34;&lt;/span&gt;,T);
+      client.publish(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/temp&amp;#34;&lt;/span&gt;,temp);
+      snprintf(temp,&lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%.1f&amp;#34;&lt;/span&gt;,RH);
+      client.publish(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/hum&amp;#34;&lt;/span&gt;,temp);           
+    }&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;{
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Update failed!&amp;#34;&lt;/span&gt;);
+    }
+  }
+  delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;格力遥控器代码&#34;&gt;格力遥控器代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;Arduino.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;IRremoteESP8266.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;IRsend.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;ir_Kelvinator.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;ESP8266WiFi.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;PubSubClient.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;uint16_t&lt;/span&gt; kIrLed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// ESP8266 GPIO pin to use. Recommended: 4 (D2).
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;IRKelvinatorAC &lt;span style=&#34;color:#a6e22e&#34;&gt;ac&lt;/span&gt;(kIrLed);  &lt;span style=&#34;color:#75715e&#34;&gt;// Set the GPIO to be used for sending messages.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;// WiFi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ssid &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;      &lt;span style=&#34;color:#75715e&#34;&gt;// Enter your WiFi name
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// Enter WiFi password
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;// MQTT Broker
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;mqtt_broker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.2.110&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;mqtt_username &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;mqtt_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; client_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;clientId-gfdsgr&amp;#34;&lt;/span&gt;;  
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; mqtt_port &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1883&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic0 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setopen&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setmod&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/settemp&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setfan&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic4 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setvert&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/sethori&amp;#34;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; setopen[&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;uint8_t&lt;/span&gt; setmod &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; kKelvinatorCool;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; settemp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; setfan &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+
+WiFiClient espClient;
+PubSubClient &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;(espClient);
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setup&lt;/span&gt;() {
+  Serial.begin(&lt;span style=&#34;color:#ae81ff&#34;&gt;115200&lt;/span&gt;);
+  ac.begin();
+  delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+  
+  WiFi.begin(ssid, password);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (WiFi.status() &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; WL_CONNECTED) {
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Connecting to WiFi..&amp;#34;&lt;/span&gt;);
+  }
+  Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Connected to the WiFi network&amp;#34;&lt;/span&gt;);
+  &lt;span style=&#34;color:#75715e&#34;&gt;//connecting to a mqtt broker
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  client.setServer(mqtt_broker, mqtt_port);
+  client.setCallback(callback);
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Set up what we want to send. See ir_Kelvinator.cpp for all the options.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;// Most things default to off.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  ac.off();
+  ac.setFan(setfan);
+  ac.setMode(kKelvinatorCool);
+  ac.setTemp(settemp);
+  ac.setSwingVertical(true);
+  ac.setSwingHorizontal(true);
+  printState();
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;callback&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; topic, byte&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; payload, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; length) {
+ 
+  Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Message arrived in topic: &amp;#34;&lt;/span&gt;);
+  Serial.println(topic);
+ 
+  Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Message:&amp;#34;&lt;/span&gt;);
+&lt;span style=&#34;color:#75715e&#34;&gt;//  for (int i = 0; i &amp;lt; length; i++) {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//    Serial.print((char)payload[i]);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//  }
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;message &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)payload;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (length &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) {
+    length &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;;
+  };
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; dest[length] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+  strncpy(dest, message, length);
+  Serial.println(dest);
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic3) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    setfan &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(dest);
+    ac.setFan(setfan);
+    printState();
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic2) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+    settemp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(dest);
+    ac.setTemp(settemp);
+    printState();
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic1) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hea&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setMode(kKelvinatorHeat);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;coo&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.setMode(kKelvinatorCool);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dry&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.setMode(kKelvinatorDry);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;aut&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.setMode(kKelvinatorAuto);
+    }
+    printState();
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic0) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.on();
+      flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;off&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.off();
+      flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (flag &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+      printState();
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      ac.off();
+    };
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic4) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingVertical(true);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;off&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingVertical(false);
+    };
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic5) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingHorizontal(true);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;off&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingHorizontal(false);
+    };
+  };
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;reconnect&lt;/span&gt;() {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;client.connected()) {
+    Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Attempting MQTT connection...&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Attempt to connect
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (client.connect(client_id, mqtt_username, mqtt_password)) {
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;connected&amp;#34;&lt;/span&gt;);
+      &lt;span style=&#34;color:#75715e&#34;&gt;// 连接成功时订阅主题
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      client.subscribe(topic0);
+      client.subscribe(topic1);
+      client.subscribe(topic2);
+      client.subscribe(topic3);
+      client.subscribe(topic4);
+      client.subscribe(topic5);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+      Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;failed, rc=&amp;#34;&lt;/span&gt;);
+      Serial.print(client.state());
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; try again in 5 seconds&amp;#34;&lt;/span&gt;);
+      &lt;span style=&#34;color:#75715e&#34;&gt;// Wait 5 seconds before retrying
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;5000&lt;/span&gt;);
+    }
+  }
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;printState&lt;/span&gt;() {
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Display the settings.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Kelvinator A/C remote is in the following state:&amp;#34;&lt;/span&gt;);
+  Serial.printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  %s&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, ac.toString().c_str());
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Display the encoded IR sequence.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ir_code &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ac.getRaw();
+  Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IR Code: 0x&amp;#34;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint8_t&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; kKelvinatorStateLength; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+    Serial.printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%02X&amp;#34;&lt;/span&gt;, ir_code[i]);
+  Serial.println();
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;loop&lt;/span&gt;() {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;client.connected()) {
+    reconnect();
+  }
+  client.loop();
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+  <pubDate>Tue, 03 Aug 2021 19:25:15 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/08/homeassistant/</guid>
+</item>
+
+<item>
+  <title>Docker配置</title>
+  <link>https://www.liulp.club/2021/08/docker/</link>
+    <description>&lt;p&gt;Openwrt中有使用docker的需求，顺道学习一下docker的配置。&lt;/p&gt;
+&lt;h2 id=&#34;空间挂载&#34;&gt;空间挂载&lt;/h2&gt;
+&lt;p&gt;openwrt默认是/opt和/overlay共用空间，因为文件格式等问题，docker在这种情况下只能使用vfs储存模式，占用空间大且速度慢。为此，在openwrt中分别为overlay和docker的opt分别分配空间并格式化为ext4格式，然后把/overlay和/opt分别挂载在上面，这样docker就会自动使用更好更快的overlay2储存模式。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032101457.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;另外，我还将一块移动硬盘挂载在/mnt/share，而且将它通过&lt;code&gt;Samba&lt;/code&gt;进行网络共享，共享下局域网传文件速度还是很可观的。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032044324.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;homeassistant&#34;&gt;Homeassistant&lt;/h2&gt;
+&lt;p&gt;首先是使用docker在openwrt中安装&lt;code&gt;Homeassistant&lt;/code&gt;，这样就可以本地搭建智能家居服务器。&lt;code&gt;Homeassistant&lt;/code&gt;使用&lt;code&gt;MQTT&lt;/code&gt;协议的通信服务，所以还搭建了一个基于&lt;code&gt;MQTT&lt;/code&gt;的开源服务器&lt;code&gt;Eclipse Mosquitto&lt;/code&gt;的docker。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.home-assistant.io/&#34;&gt;Homeassistant&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/MQTT&#34;&gt;MQTT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mosquitto.org/&#34;&gt;Eclipse Mosquitto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;mqtt&#34;&gt;MQTT&lt;/h3&gt;
+&lt;p&gt;首先设置配置文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p /mosquitto/config
+mkdir -p /mosquitto/data
+mkdir -p /mosquitto/log
+nano /mosquitto/config/mosquitto.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;并在mosquitto.conf中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;persistence true
+persistence_location /mosquitto/data
+log_dest file /mosquitto/log/mosquitto.log
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果需要使用密码，因为我只在局域网提供服务，就没有添加用户名密码。在mosquitto.conf中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;allow_anonymous false
+password_file /mosquitto/pwfile
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后在容器启动后运行命令，添加用户admin以及密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mosquitto_passwd -c /mosquitto/pwfile admin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;并授予目录权限&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;755&lt;/span&gt; /mosquitto
+chmode -R &lt;span style=&#34;color:#ae81ff&#34;&gt;777&lt;/span&gt; /mosquitto/log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;完成以上准备后，启动容器&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mosquitto&amp;#34;&lt;/span&gt; --net&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;host &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mosquitto/data:/mosquitto/data &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mosquitto/log:/mosquitto/log &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    eclipse-mosquitto:1.6.14
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;要注意的是，一是最新版本的Eclipse Mosquitto 2无法被正常访问，所以建议使用1.6.14版本。二是在openwrt中的桥接模式，端口映射后被其他终端直接访问有问题，建议直接使用host模式，共享网络。&lt;/p&gt;
+&lt;h3 id=&#34;homeassistant-1&#34;&gt;Homeassistant&lt;/h3&gt;
+&lt;p&gt;接下来运行Homeassistant&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;home-assistants&amp;#34;&lt;/span&gt; -p 8123:8123 &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /root/homeassistant/config:/config &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mnt/share:/mnt/share &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    homeassistant/home-assistant
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;除了将配置文件进行映射，我还将我的分享目录进行了映射，这样就可以通过&lt;code&gt;Homeassistant&lt;/code&gt;直接访问分享目录下的影视资源。&lt;/p&gt;
+&lt;h2 id=&#34;nginxphp&#34;&gt;Nginx+PHP&lt;/h2&gt;
+&lt;p&gt;为了为局域网添加Speedtest。刚开始打算直接添加Speedtest的docker，可惜出现了架构不兼容的问题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;WARNING: The requested image&#39;s platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;为此，我决定曲线救国，使用docker搭建web服务器。开始打算使用集成好的docker镜像，最后还是决定使用docker-compose的方案。分别安装nginx和php的官方docker镜像，这两个镜像都没有架构兼容性问题。&lt;/p&gt;
+&lt;p&gt;首先安装php&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;web-php&amp;#34;&lt;/span&gt; -p 9000:9000 &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /root/nginx/webroot:/usr/share/nginx/html &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    php:7.2-fpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其次添加nginx的配置文件conf.d&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name localhost;
+
+    index index.php index.html;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    root /var/www/html;
+
+    set $virtualdir &amp;quot;&amp;quot;;
+    set $realdir &amp;quot;&amp;quot;;
+
+    if ($request_uri ~ ^/([^/]*)/.*$ ) {
+        set $virtualdir /$1;
+    }
+
+    if (-d &amp;quot;$document_root$virtualdir&amp;quot;) {
+        set $realdir &amp;quot;${virtualdir}&amp;quot;;
+    }
+
+    location / {
+        try_files $uri $uri/ $realdir/index.php?$args;
+    }
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 192.168.2.110:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中，文件路径为/root/nginx/webroot。并且将&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fastcgi_pass 192.168.2.110:9000;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;中的地址修改为php的运行位置。建议不要用桥接的地址，因为我发现每次重启后，桥接地址是可能发生变换的，建议端口映射后，直接使用局域网地址。&lt;/p&gt;
+&lt;p&gt;然后运行nginx&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;web-nginx&amp;#34;&lt;/span&gt; -p 8088:80 &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /root/nginx/conf.d:/etc/nginx/conf.d
+    -v /root/nginx/webroot:/usr/share/nginx/html
+    nginx:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;有个问题是，8080端口不能正常使用，建议使用自定义端口，譬如我用的8088端口。&lt;/p&gt;
+&lt;h3 id=&#34;speedtest&#34;&gt;Speedtest&lt;/h3&gt;
+&lt;p&gt;成功运行后，在文件目录，我的是/root/nginx/webroot，添加Speedtest的网站文件。并将example-singleServer-full.html重命名为默认文件index.html。然后就可以直接访问对应的网址测速了，我的是&lt;a href=&#34;http://192.168.2.110:8088/speedtest/&#34;&gt;192.168.2.110:8088/speedtest/&lt;/a&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/librespeed/speedtest&#34;&gt;Speedtest&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当当当当，最终的测速效果如下&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032017072.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;</description>
+  <pubDate>Tue, 03 Aug 2021 17:46:55 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/08/docker/</guid>
+</item>
+
+<item>
+  <title>Openwrt搭建</title>
+  <link>https://www.liulp.club/2021/08/openwrt_init/</link>
+    <description>&lt;p&gt;心心念念了好久，暑假回家终于用屯的二手树莓派搭建起了Openwrt的软路由。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;镜像安装&#34;&gt;镜像安装&lt;/h2&gt;
+&lt;p&gt;因为使用的是树莓派4b，网上有现成的为树莓派4b编译的镜像&lt;code&gt;OpenWrt-Rpi&lt;/code&gt;，而且每天基于Github Action自动更新。然后将下好的镜像使用&lt;code&gt;balenaEtcher&lt;/code&gt;烧录到SD卡内插入到树莓派中。有意思的是，重新烧录同样的镜像，树莓派是不会重新加载的，所以每次我重写镜像都需要换个镜像刷写，再刷回来以进行重置。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/SuLingGG/OpenWrt-Rpi&#34;&gt;OpenWrt-Rpi&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.balena.io/etcher/&#34;&gt;balenaEtcher&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;网络设置&#34;&gt;网络设置&lt;/h2&gt;
+&lt;p&gt;因为是用树莓派做旁路由，所以需要对于网络进行一定的设置。主要是在主路由上设置网关和DNS服务器地址指向旁路由。在树莓派上修改ip地址到主路由的网段，并将网关改为主路由的ip地址。具体到我，我设定树莓派向外提供服务，譬如将默认DNS服务器指向旁路由，由旁路由运行Adguard Home提供DNS服务，进行广告过滤。但是并没有设置主路由网关指向旁路由，也就没有默认所有流量经过旁路由。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://adguard.com/&#34;&gt;Adguard Home&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;网络拓扑&#34;&gt;网络拓扑&lt;/h3&gt;
+&lt;p&gt;刷机成功后，连上树莓派的默认Wifi。首先要将旁路由的ip地址改到主路由网段：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;uci set network.lan.ipaddr&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;192.168.2.110
+uci commit network
+/etc/init.d/network restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后就可以将树莓派插到主路由的LAN口上了，并通过刚刚设置的ip，对于我就是192.168.2.110，直接访问了。整个网络拓扑如下&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032051849.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;dns服务配置&#34;&gt;DNS服务配置&lt;/h3&gt;
+&lt;p&gt;由于我主路由本来运行着&lt;code&gt;SmartDNS&lt;/code&gt;，我关闭了主路由的DNS服务，从主路由将DNS服务器直接设置为树莓派的ip。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/pymumu/smartdns&#34;&gt;SmartDNS&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031647152.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;这里遇到的一个坑是，本来计划直接让Adguard Home接管53端口，但是出现了梯子用不了等网络的问题。最后还是选用将Adguard Home作为dnsmasq的上游服务器，可能这样其他服务也可以正常设置DNS服务，如修改dnsmasq配置。&lt;/p&gt;
+&lt;p&gt;因为我家光猫不支持ipv6，所以我在旁路由DHCP/DNS和Adguard Home中分别禁止了ipv6解析，以便快速返回解析结果。&lt;/p&gt;
+&lt;h3 id=&#34;自定义域名&#34;&gt;自定义域名&lt;/h3&gt;
+&lt;p&gt;Adguard Home不仅仅可以用于拦截广告。可以通过Adguard Home自定义拦截规则，来设置自定义域名，譬如设置&lt;a href=&#34;http://mywifi.org&#34;&gt;mywifi.org&lt;/a&gt;指向192.168.2.110，条目如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;192.168.2.110 mywifi.org
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这里有一点，Openwrt会拦截指向内网的解析，需要关掉网络 $\to$ DHCP/DNS $\to$ 基本设置的重定向保护，解析才能生效。&lt;/p&gt;
+&lt;h2 id=&#34;内网穿透&#34;&gt;内网穿透&lt;/h2&gt;
+&lt;p&gt;因为有公网服务器，所以想把家里的局域网和公网服务器组网进行内网穿透。我使用的是&lt;code&gt;zerotier&lt;/code&gt;这款开源软件。这款软件一定条件下可以实现点对点通信，突破公网服务器做内网穿透的带宽限制。因为zerotier的节点服务器都在国外，我在公网服务器上搭建了中转通信的moon服务器，加速访问。我还发现了一款好的&lt;code&gt;zerotier&lt;/code&gt;第三方安卓客户端&lt;code&gt;ZerotierFix&lt;/code&gt;，可以在安卓端方便地添加moon节点。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://my.zerotier.com/&#34;&gt;zerotier&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://imcm.xyz/linux-zerotier-moon/&#34;&gt;zerotier moon&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/kaaass/ZerotierFix&#34;&gt;ZerotierFix&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;具体的整个zerotier的配置流程，强烈推荐b站up主“韩风Talk”的讲解视频&lt;/p&gt;
+&lt;div style=&#34;position: relative;&#34;&gt;
+    &lt;iframe class=&#34;biiframe&#34; width= &#39;100%&#39; height=&#39;400&#39;
+    src=&#34;//player.bilibili.com/player.html?bvid=BV1hT4y1E78k&amp;page=1&amp;as_wide=1&amp;high_quality=1&amp;danmaku=0&#34; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;</description>
+  <pubDate>Tue, 03 Aug 2021 15:51:03 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/08/openwrt_init/</guid>
+</item>
+
+<item>
+  <title>论自由与教育</title>
+  <link>https://www.liulp.club/2021/02/freedom_and_education/</link>
+    <description>&lt;p&gt;常常困惑于，父母碎碎念地种种优秀的品行，总是莫名的让人提不起兴致。深夜逐笔，探讨一二。&lt;/p&gt;
+&lt;p&gt;我妈常说，你哥以前有个记日记的好习惯，你记日记么？就会莫名的反感，她还总说我，不就问问么。总感觉，当父母口中说出一些正确的事情，我会有一种应激反应般的抵触。之前就简单的觉得，这自己就是叛逆。可是细细想来，叛逆到底会持续多久，都临近大学毕业了的我还是叛逆的年龄么。叛逆一次不解释任何问题，反而给了这种现象一个名字，让其更加合理了起来，如同春天有花，冬天有雪，青春期有叛逆。&lt;/p&gt;
+&lt;p&gt;我们什么时候会走出叛逆期呢，就是探讨到底什么因素会影响叛逆。渐渐长大了，处于对长辈的尊重和关心，有时会遵从长辈的意愿，但是那种莫名的抵触还是存在，只是压抑在了心底，变成所谓成年人必须承受的东西。这都无助于这个问题本身的探究，我今天突然联想到我自己建的这个小站，每每有所思考，就忍不住上来写上几笔，贻笑大方，或偶有所学，分享共赏。这和我妈口中的“日记”又何其相似呢？为什么，当我听到她口中说出来时，就一百个不情愿呢？是所谓的叛逆期非要对着干么，这个解释我不太接受。&lt;/p&gt;
+&lt;p&gt;细细想来，当我妈最初提写所谓的日记，她也没写过，她只是朦朦胧胧有这么个想法。对我来说，就是无厘头，每天花时间在这个上面，毫无收益也无成就感。日记这个行为与当时的我的生活并不兼容。而如今我写这个小站博文，从最初的建小站是我计算机向的兴趣，就有了丰富博文的动力，和这段时间时间较为自由，有了更多的思考，正可谓干柴烈火，一碰即燃。&lt;/p&gt;
+&lt;p&gt;虽然，行为相似，但是所处的情景却已大大地不同。当时繁重的课业下，还长期记日记，毫无乐趣可言，我对这个事情留下了很不好的印象。所以，如今说到的日记，我都觉得是失败的教育尝试的代名词，令人大皱眉头。想来这都不能简单地概括成和父母对着干，在当时的条件下，确实这样做的收益远远低于父母所设想的，而这些主观体验又是不好分说的，就留给了父母一个顶牛叛逆的印象。&lt;/p&gt;
+&lt;p&gt;想再从自由的角度试着探讨一二，是不是也有要逃离父母管束的动机，使得表现得那么不听话呢？想来也是有的，为了表现得自己不是那么中规中矩，向父母那样的保守，总是会想出一些激进的方式方法，也许客观上很难说出自己的方法是否更好，但是只要能带来更大的可能性，就愿意去做，we have nothing to lose. 看起来就像一个投资小白，只看潜在的收益，而不记风险，确实，一个青春期的少年，对于风险，确实没有那么敏感。再者说，再大的风险，好像也不是那么致命，所以为什么不博一博呢？正值青春的少年，就像脱笼的鸟儿，飞到父母触及不到的地方，这就在父母和子女之间形成了一种内外的张力，助推了叛逆的发生。&lt;/p&gt;
+&lt;p&gt;而另一个有意思的点是，这种对于父母的一味抵触，也是滋生了一种懒惰的心理。思考最近我学英语，这是个从小到大都在干的活。父母的反复督促并没有起到鼓励的作用，反而让我更加不想学那个我印象中的洪水猛兽。而寒假里，开始背单词，看文章，突然发现，其实根本没有想得那么难。只是在如此的情境下，自己给自己吓住了，偷了懒。如此不知凡几，也不知抛掷了多少宝贵的时光与机会。&lt;/p&gt;
+&lt;p&gt;可以说，父母说的不经判断一律的否定或者肯定，都是不合理的。繁重的课业，贫乏的沟通，让这种懒惰有了舆论空间，丝毫没有意识到其危害。对于很多父母提到的中肯的建议，也被这种带有惯性的抵抗给冲毁。想来，如果能重来，确实应该更加重视和分辨父母的建议和教导。而不是举着叛逆的大气，懒政怠政。&lt;/p&gt;
+&lt;p&gt;简单说来，叛逆是父母对子女的教育和父母与子女的关系，没有弄清，没有理顺的结果。是那个十几岁的夏天，如汗水的苦涩，却难忘的记忆。&lt;/p&gt;</description>
+  <pubDate>Fri, 05 Feb 2021 23:34:44 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/02/freedom_and_education/</guid>
+</item>
+
+<item>
+  <title>娱乐至死</title>
+  <link>https://www.liulp.club/2021/01/amusing_ourselves/</link>
+    <description>&lt;p&gt;好久之前有读过很出名的《娱乐至死》。只记得当时的感觉是，提醒我们不要沉迷电子虚拟的世界。今天和妈妈的一番交谈，突然有点冷汗直冒，有了新的思考。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20210130223035.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;看着电视剧《山海情》中劝学生不要辍学打工的乡村教师，当乡镇中学老师妈妈聊起了学校的现状。虽然我早知道学校的好学生流失严重，教学成绩难有起色。但现实远比这更难，留下的孩子的家长普遍不重视孩子教育，只当学校是一个熊孩子收容所。为了自己省心，离学校只有几步远的家长竟安排孩子住校。回到家中，为了孩子不惹事，直接给个手机随便玩。这带来的问题是严重的，有的家长意识到有问题时想收回手机，结果孩子竟以自残相逼。听妈妈说着，心里想着学生伤痕累累的手臂，真的不知是怎么个滋味。&lt;/p&gt;
+&lt;p&gt;想想我小时候也是非常地迷打游戏，从红色警戒，摩尔庄园到赛尔号，qq飞车。每到周五放学，我都会像火箭一样跑到爸妈学校教学楼上去打游戏。因为只能打到学校放学，所以每早到一分钟，就能多打一分钟么。感觉虽然本人在田径赛场几无建树，但是在通往教学楼的大道上，我总是Number One。正因为自己过去的经历，我才更觉得如今学校的情况值得深思。虽然都是很喜欢电子游戏，但我们仍然其他丰富多彩的活动。敬重老师，体贴父母，关心朋友，热爱学习。我们当时也会为能够背诵水浒一百零八将而欢欣鼓舞。总的来说，我们的娱乐和生活是和谐相容的。&lt;/p&gt;
+&lt;p&gt;可是如今，想想自己也是在宿舍一坐就能作一天，不运动，不social，甚至不想吃饭。结合自己与父母的学生，也许电子游戏对我们的影响，已经不是那么中性可控的了。电子游戏正在侵蚀我们的生活，让我们的生活变得单调，脆弱且不可持续。有个段子说的好，宇宙边界，知乎无边。虚拟世界已经有些时候已经不是工作之余的消遣，而是变成了生活本身。每天起床不玩上一把，刷上一会儿，都拒绝起床，都没法开始新的一天。&lt;/p&gt;
+&lt;p&gt;我在思考，电子游戏到底会给我们的生活带来多大的影响。对于一个成年人，也许是会丧失向上的动力，但是对于一个刚上小学的孩子，电子游戏刺激下的多巴胺是不是会让其失去体验解决一道难题，帮朋友走出低谷所带来的快乐的机会，因为他也许早已耐受。当课本里提到坚毅，关怀等词汇，是不是在他们的心里会和战争这样的词汇一样变得模糊不清，仿佛不在一个世界。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20210130232559.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;无数的电影，书籍讲述感受亲情，发现美好的坎坷与努力，当一切都被电子游戏充斥，这旅程必然会更加崎岖与艰辛。甚至如果电子游戏可以越来越拟合人内心深处的快乐，亲情，友情甚至爱情也许都会变得可有可无。如果这一切再与自由主义相结合，失去了道德伦理的约束，不能想象人们会在追求电子游戏中的快乐的歧路上奔出多远。&lt;/p&gt;
+&lt;p&gt;是的，有很多人可以控制自己不沉迷于电子游戏，可是，假以时日如果日益精进的游戏模式可以让90%的人无法抵抗，那么真的就任由人们自甘堕落，只剩下抵抗住诱惑的精英们给予失败的“贱民”以“怜悯”，又只让其苟延残喘不至于彻底毁灭。对于游戏的限制的主力如果仅停留在个人层面，那么如果有一天有游戏可以发展到近似毒品的威力，个人的自控怎么能够抵挡这极限的刺激快感。想想看，我们的教育该怎么做，何不食肉糜是笑话，那何不打游戏呢？工作这么苦，为什么不打游戏，因为要养活家庭，为什么要养活家庭，低保也能果腹，然后靠游戏寻找快乐么。面对这样的逻辑，我们当如何自处？是不是应该在一个更高的层面上去看到和思考这个问题，一个个问题少年的诞生，是不是应该社会去参与其中，至少引导游戏产业的发展，加强游戏产业的监督。&lt;/p&gt;
+&lt;p&gt;总的来说，给我一种感觉，游戏可以严重地侵蚀生活。而更重要的是，这不单单是一个的熊孩子需要家长更用心教育的问题，也许这种侵蚀确实是很多人难以抵挡的。承认这种脆弱与无助并不丢人，因为任何问题总会有解决的办法。但是不正视它，回避它才可能带来深远而沉重的代价。&lt;/p&gt;
+&lt;p&gt;寥寥数语，难表真意，望抛砖引玉，诸君共勉。&lt;/p&gt;</description>
+  <pubDate>Sat, 30 Jan 2021 22:07:18 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/01/amusing_ourselves/</guid>
+</item>
+
+<item>
+  <title>网站跨域设计</title>
+  <link>https://www.liulp.club/2021/01/cors/</link>
+    <description>&lt;p&gt;花了小两天时间彻底实现了一下&lt;code&gt;teambition&lt;/code&gt;直链的跨域问题，值得写下来纪念一下。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;teambition&#34;&gt;Teambition&lt;/h2&gt;
+&lt;p&gt;目前找到了两个&lt;code&gt;teambition&lt;/code&gt;的直链系统，一个是用&lt;code&gt;Node.js&lt;/code&gt;写的，另一个是用&lt;code&gt;php&lt;/code&gt;写的。&lt;code&gt;Node.js&lt;/code&gt;写的我不会改，就修改了&lt;code&gt;php&lt;/code&gt;版本的，成功实现了自己的想法，哈哈哈，开心~~&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.52pojie.cn/thread-1320716-1-1.html&#34;&gt;teambition直链解析&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/FlxSNX/TeambitionShare&#34;&gt;TeambitionShare&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;应为直链解析直接解析到&lt;code&gt;teambition&lt;/code&gt;的服务器，本意是为了不用走服务器流量。但是在网页调用时会出现跨域的问题，我就修改了链接格式使用了反向代理。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;// index.php
+$cors1 = &amp;#34;https://teambition.ltest.tk/service&amp;#34;;
+$cors2 = substr($result[&amp;#39;downloadUrl&amp;#39;], 34);
+$result[&amp;#39;downloadUrl&amp;#39;] = &amp;#34;$cors1$cors2&amp;#34;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;teambitionshare&#34;&gt;TeambitionShare&lt;/h2&gt;
+&lt;p&gt;支持添加尾缀,直接链接访问文件不验证密码和&lt;code&gt;wehp&lt;/code&gt;预览&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-php&#34; data-lang=&#34;php&#34;&gt;// flx.php
+if(strpos($s,&amp;#39;.&amp;#39;) !== false){ 
+  $temp = explode(&amp;#39;.&amp;#39;, $s);
+  $s = $temp[0];
+}
+
+// index.php
+if(substr($_SERVER[&amp;#39;REQUEST_URI&amp;#39;],0,9) != &amp;#39;/download&amp;#39;){……}
+
+//function.php
+if($type == &amp;#39;mp4&amp;#39; || in_array($type,[&amp;#34;gif&amp;#34;,&amp;#34;jpeg&amp;#34;,&amp;#34;jpg&amp;#34;,&amp;#34;png&amp;#34;,&amp;#34;webp&amp;#34;]) || in_array($type,[&amp;#34;mp3&amp;#34;,&amp;#34;ogg&amp;#34;,&amp;#34;wav&amp;#34;])){
+  return &amp;#39;?preview&amp;#39;;
+}
+
+//_preview.html
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?php&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;elseif&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;in_array&lt;/span&gt;($filetype,[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;gif&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;jpeg&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;jpg&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;png&amp;#34;&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;webp&amp;#34;&lt;/span&gt;])){ 
+  &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;img&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mdui-center&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;lt;?=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$downloadUrl&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;?&amp;gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;max-width: 100%;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+} &lt;span style=&#34;color:#75715e&#34;&gt;?&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;nignx目录分流&#34;&gt;Nignx目录分流&lt;/h2&gt;
+&lt;p&gt;本来&lt;code&gt;teambition&lt;/code&gt;解析和反向代理都可以分配一个域名，不过这样还是有跨域的问题。所以我学习重写了&lt;code&gt;nignx&lt;/code&gt;的配置文件，使用子目录做分流。根目录是&lt;code&gt;TeambitionShare&lt;/code&gt;，&lt;code&gt;/service&lt;/code&gt;目录用来转代&lt;code&gt;teambition&lt;/code&gt;服务器，进行反向代理，而&lt;code&gt;/pdf&lt;/code&gt;和&lt;code&gt;/epub&lt;/code&gt;用于加载&lt;code&gt;pdf&lt;/code&gt;和&lt;code&gt;epub&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;set $flag 1;
+location /service/ {
+  proxy_pass https://data-hz-pds.teambition.net/;
+  proxy_set_header Host data-hz-pds.teambition.net;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header REMOTE-HOST $remote_addr;
+  set $flag 0;
+}
+location /pdf {
+  set $flag 0;
+}
+location /epub {
+  set $flag 0;
+}
+
+if (!-e $request_filename){
+  set $flag &amp;#34;${flag}1&amp;#34;;
+}
+#根目录伪静态
+location / {
+  if ($flag = 11){
+    rewrite ^(.*)$ /index.php/?s=$1;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;epubjs调整&#34;&gt;Epubjs调整&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;epubjs&lt;/code&gt;支持以文件名为结尾的网址，为了和&lt;code&gt;TeambitionShare&lt;/code&gt;生成的目录相容。先网页默认添加&lt;code&gt;index.epub&lt;/code&gt;的尾缀，然后在&lt;code&gt;javascript&lt;/code&gt;中再删除。简单得实现了兼容。我真是一个小天才，哈哈。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-javascript&#34; data-lang=&#34;javascript&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// epub.js
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onreadystatechange&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;slice&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;);
+&lt;span style=&#34;color:#a6e22e&#34;&gt;xhr&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;GET&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;效果&#34;&gt;效果&lt;/h2&gt;
+&lt;p&gt;当当当，展示一下效果。当然走的海外的服务器，延迟稍微有点高。&lt;/p&gt;
+&lt;iframe class=&#34;pdfiframe&#34; width=&#34;100%&#34; height=&#34;100%&#34; frameborder=&#34;0&#34;
+    src=&#34;https://alist.liulp.club/pdf/web/viewer.html?file=https://alist.liulp.club/d/Alidrive/Website/document/Terence_Tao_Analysis_I.pdf&#34; &gt;
+&lt;/iframe&gt;</description>
+  <pubDate>Sun, 10 Jan 2021 23:02:38 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/01/cors/</guid>
+</item>
+
+<item>
+  <title>2021跨年记(娱乐篇)</title>
+  <link>https://www.liulp.club/2021/01/new_year_happy/</link>
+    <description>&lt;blockquote&gt;
+&lt;p&gt;迎着初升的太阳，2021的大门已经打开。在这个新年与生日相遇的日子里，记录自己2020年的探求与欢愉。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;序&#34;&gt;序&lt;/h2&gt;
+&lt;p&gt;想想自己过去的一年，在开心这件事情上，好像没有什么惊天动地的大动作，但细小的点滴却无处不在，时间也变得活泼起来。&lt;/p&gt;
+&lt;h2 id=&#34;书籍&#34;&gt;书籍&lt;/h2&gt;
+&lt;p&gt;过去的一年，读了一些书。一是春夏学期考试结束，读了一波。然后保研之后，又读了一波。哈哈，总的来说还是，持续性咸鱼，爆发性读书。要数数看了什么书，就有想看很久的《明朝那些事儿》，看了无数遍电视剧第一次看原著的《亮剑》，关于文革始末的《大动乱的年代》，第一次追完的网文《第一序列》以及考古经典网文《凡人修仙传》和《凡人修仙传仙界篇》。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20210101101232.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;以前，谈起明朝只知道有老不上朝的皇帝。看了《明朝那些事儿》，那历史上的一个个人物渐渐丰满了起来，他们的故事，如今读起来，仍惹人深思。以前，只知道亮剑中抗日救国的热血故事，读了原著才看到其结局那浓密的忧伤，这也激发了我的兴趣去阅读文革相关的书记。《大动乱的年代》也许不能真的让我完全探秘文革风云，但至少为文革梳理了一个发展的脉络，让我们有机会再看当年的混沌与探索。高考结束也考古过好多的网络小说，今年第一次真正追完了一本小说，会说话的肘子的文风，真的非常讨喜，幽默又不乏深思。从《大王饶命》到《第一序列》，能看到肘子仍在不断地学习，探索与突破。真心希望肘子2021能在创作更好的文章。&lt;/p&gt;
+&lt;h2 id=&#34;游戏&#34;&gt;游戏&lt;/h2&gt;
+&lt;p&gt;想着从最初的红警，到同学们一起玩4399，摩尔庄园和赛尔号。时光荏苒，如今一转眼长大了，在周围同学的吸引下，今年玩起了王者荣耀。农药玩的比较崩，常常被教做人，但也渐渐升了段位，积累的不少英雄不少皮肤，想想还是非常有趣的。&lt;/p&gt;
+&lt;p&gt;steam上也有了游戏若干。steam上的游戏真的给我开了一扇新世界的大门，原来有这么多好玩的游戏。可惜事实上，我的电脑基本上带不动。不过，感兴趣的很多，有糖豆人，隐形守护者，杀手，&lt;code&gt;PolyBridge2&lt;/code&gt;，&lt;code&gt;Overcooked2&lt;/code&gt;以及巨烧时间的&lt;code&gt;Stellaris&lt;/code&gt;和巨烧硬件的赛博朋克2077。&lt;/p&gt;
+&lt;p&gt;2021换电脑，务必都玩一遍，哈哈哈哈~~~&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20210101103828.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;影视&#34;&gt;影视&lt;/h2&gt;
+&lt;p&gt;今年因为疫情，电影院基本没去过。但不妨碍我看了不少让人印象深刻的影视剧。有治愈系的《凪的新生活》，有恋爱甜剧《世界上最难的恋爱》，有星战系列新作《曼德罗人》第二季，有刚刚开看的《西部世界》，有火锅停不下来的《生活如沸》，有新奇体验的《富豪谷底求翻身》，有《二十不惑》却《三十而已》，也有考古老剧《安家》。也许，影视剧里的人生并不真实，但将自己生活的点与影视剧里的点连成线段，线段的一部分总是落在真实以内，自己的生活以外吧。&lt;/p&gt;
+&lt;p&gt;想来2020是确实是如同电影的一年，疫情降临，加上澳洲山火，非洲蝗灾，总觉得生活似乎在演绎《流浪地球》里的故事。正好发现了一个用心的年度混剪，正与我当时的想法不谋而合，分享给有缘人。影视和现实可能以我们想不到的方式交会在一起。但希望我们总会是 Happy Ending。&lt;/p&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?2020%ef%bc%8c%e5%83%8f%e4%b8%80%e5%9c%ba%e7%94%b5%e5%bd%b1.mp4&amp;mp4&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;
+&lt;p&gt;秋冬交替之际，本来打算去看电影，却意外看到了开心麻花的舞台剧。从此一发而不可收拾，从《了不起的爹地》，《乌龙山伯爵》，《莎士比亚别生气》到《贼想得到你》。小半年下来，竟然没有错过开心麻花杭州站的每一场演出。另外，还被yh同学带入坑了音乐剧&lt;code&gt;Les Misérables&lt;/code&gt;，真的十分十分的惊艳，让人看了多少遍都还想再看一遍。虽然看过原著，但是音乐剧版本确实是另一种美妙的展开方式。&lt;/p&gt;
+&lt;h2 id=&#34;技术&#34;&gt;技术&lt;/h2&gt;
+&lt;p&gt;春夏考试周结束，我一时兴起建立一个小站，从最初只能写简单的博客，到各种更加丰富的UI和功能。有尾部&lt;code&gt;Github&lt;/code&gt;式标签，独立站内搜索，相关文章推荐，还有支持epub, pdf, video, m3u8的展示等等。看着小站一点点成长丰富，真的开心！站点运行小200天时间，时不时想到新的想添加的功能，也总是遇到各种各样的问题，一个功能常常看着很简单，一实现起来就是一天甚至几天。现在想来，种种细节，真的蛮有成就感。&lt;/p&gt;
+&lt;p&gt;这个冬天为了玩江南百景图，又折腾起了安卓模拟器，学了简单的&lt;code&gt;lua脚本&lt;/code&gt;设计。哈哈，解放双手，自动刷经验。刷经验事小，真正看到自己的脚本work了，是更有成就感。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-lua&#34; data-lang=&#34;lua&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;-- 模拟滑动并按条件点击&lt;/span&gt;
+x&lt;span style=&#34;color:#f92672&#34;&gt;=-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+i&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (x&lt;span style=&#34;color:#f92672&#34;&gt;==-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+    moveTo(&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i, &lt;span style=&#34;color:#ae81ff&#34;&gt;700&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt;i, &lt;span style=&#34;color:#ae81ff&#34;&gt;300&lt;/span&gt;, {[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;step&amp;#34;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;,[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ms&amp;#34;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;70&lt;/span&gt;,[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;index&amp;#34;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;,[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;stop&amp;#34;&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;})
+    mSleep(&lt;span style=&#34;color:#ae81ff&#34;&gt;800&lt;/span&gt;)
+    x,y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; findImage(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;shan.png&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1600&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;900&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;end&lt;/span&gt;
+
+tap(x,y)
+mSleep(&lt;span style=&#34;color:#ae81ff&#34;&gt;800&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+  <pubDate>Fri, 01 Jan 2021 09:17:25 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/01/new_year_happy/</guid>
+</item>
+
+<item>
+  <title>2021跨年记(严肃篇)</title>
+  <link>https://www.liulp.club/2020/12/new_year_study/</link>
+    <description>&lt;blockquote&gt;
+&lt;p&gt;2020年，不知不觉就走到了尾声。回首2020，展望2021，记录自己踽踽独行的点滴。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;序&#34;&gt;序&lt;/h2&gt;
+&lt;p&gt;去年跨年，在倒时差的我直接睡过了0点，现在想来，整个2020可能没多少天0点就睡了，所以0点就睡觉而且睡着了，也是蛮有仪式感的么。&lt;/p&gt;
+&lt;p&gt;像我在睡梦中进入了2020，感觉中国也在懵懂中与新冠撞了个满怀，从开始的流言蜚语，彷徨恐慌，到官媒发声，除夕封城，到而后武汉乃至全国抗疫的点点滴滴。疫情是对我们每个人的考验，也是对整个国家治理体系和治理能力的大考，值得欣慰的是，我国在这次抗疫中从方方面面都表现得比非典时期好了很多很多，相信历经风雨，才能更加从容坚定，祖国会越来越好。&lt;/p&gt;
+&lt;h2 id=&#34;春家校&#34;&gt;春，家校&lt;/h2&gt;
+&lt;p&gt;疫情之下，体验了小一个学期的线上上课，这个学期选了不少课，李代数，表示论，黎曼几何，还选了wf老师的代数几何中的拓扑方法，旁听了半个学期他的几何分析。线上上课确实影响不是很大，比较大的变化就是试着用 $\LaTeX$ 写了绝大部分作业，算是对自己的更高的要求。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201231212543.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;兴趣使然，选了另一个wf老师的一门人工智能，感觉真的蛮有意思的。从主成分分析，残差网络，到&lt;code&gt;Q-learning&lt;/code&gt;，再到自己落实的俩仨项目，都记忆满满。想来，这在我转专业中也起了很重要的作用。&lt;/p&gt;
+&lt;p&gt;浙大允许返校后，和yh同学同住了半个学期。想来，有个人每天聊聊学的东西，真的很有意义，也十分有趣。&lt;/p&gt;
+&lt;h2 id=&#34;夏家&#34;&gt;夏，家&lt;/h2&gt;
+&lt;p&gt;联系了shb教授做暑期科研，第一次真的试着去读数学论文，真正见识到了优秀的数学工作者的工作。从开始的一些直观的感觉，到后面的细细推到计算，将一个猜想真正一点点变为定理。感觉在数学中追寻许久的彼岸，尽在眼前。想来这么年，一直对数学有一种特殊的感情，时光流转，岁月沉浮，想来，今后提起数学，也是眼中有光，心中热血。&lt;/p&gt;
+&lt;p&gt;也许学人工智能后真的不能花那么充足的时间学习数学了，但花时间，要把之前自己接触过的数学，认真慢慢吃透，就立下这个flag吧！&lt;/p&gt;
+&lt;h2 id=&#34;秋校&#34;&gt;秋，校&lt;/h2&gt;
+&lt;p&gt;暑假一过，回学校的时候还没觉得要转专业。虽然解释了好多次，但想来当年读《生命不能承受之轻》的那种感受最为贴切，也许生命中的那些重要的确定，做出的其实远比想象的随意吧。&lt;/p&gt;
+&lt;p&gt;转专业让自己有了最忙碌的一个月，突击&lt;code&gt;C++&lt;/code&gt;机考，准备软院面试，还有数院的保研面试。准备不足的紧张和政策不明确的焦虑，没有压垮我。万幸，最后的结果是最好的。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201231221721.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;冬校&#34;&gt;冬，校&lt;/h2&gt;
+&lt;p&gt;转到软院真的有点人生地不熟的惶恐，但是遇到了ry学长，gyq学长和hjz同学一批真的很友善，很nice的人。让我顺利在软院落下脚，扎下根，真心地感谢他们默默的帮助。从最初的懵懂想象，到一点点学习尝试各种人工智能的想法，真，这个冬天不单调。&lt;/p&gt;
+&lt;h2 id=&#34;终展望&#34;&gt;终，展望&lt;/h2&gt;
+&lt;p&gt;在一个想爬山失败，就漫步校园，还发现了去7教的捷径的日子；在一个没抢到新晚票，独自在宿舍写文的“特殊”日子。其实就像我的这一天，总是感觉还是缺点什么，也会有意想不到的收获。&lt;/p&gt;
+&lt;p&gt;2021，希望自己该坚持的能坚持，能尝试的去尝试，想学习的快学习。冲鸭！！！&lt;/p&gt;</description>
+  <pubDate>Thu, 31 Dec 2020 15:59:25 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/12/new_year_study/</guid>
+</item>
+
+<item>
+  <title>英语上头</title>
+  <link>https://www.liulp.club/2020/11/english/</link>
+    <description>&lt;blockquote&gt;
+&lt;p&gt;注意注意，准备托福啦！&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;十一月第二周&#34;&gt;十一月第二周&lt;/h2&gt;
+&lt;h3 id=&#34;1109&#34;&gt;11.09&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;前沿讨论班讲课 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;以为完结了，突然发现凡人有了仙界篇，惊喜。看了三天凡人！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201109213638.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1110&#34;&gt;11.10&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;又是&amp;quot;凡人&amp;quot;的一天&lt;/li&gt;
+&lt;li&gt;双十一买衣服啦 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1111&#34;&gt;11.11&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;双十一消费一千&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1112&#34;&gt;11.12&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;设计&lt;code&gt;Lflow&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;与r学长交流一下发现初版和&lt;code&gt;RealNVP&lt;/code&gt;想法一致&lt;/li&gt;
+&lt;li&gt;考虑怎么分离独立变量，也许可以使用差分&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$E(X(-E(XY)X+Y))=-E(XY)E(X^2)+E(XY)=0 \text{, if } E(X^2)=1$$&lt;/p&gt;
+&lt;h3 id=&#34;1113&#34;&gt;11.13&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看开心麻花表演&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+&lt;div class=&#34;image-gallery&#34;&gt;
+    &lt;div class=&#34;image-gallery-metabar&#34;&gt;
+        &lt;span&gt;Gallery 3 images&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&#34;image-gallery-photos image-gallery-photos--thumbnail&#34;&gt;
+        
+        &lt;div class=&#34;photo-box&#34;&gt;
+            &lt;p class=&#34;photo-box-inner&#34;&gt;
+                &lt;img class=&#34;photo&#34; src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201114145924.webp&#34; alt=&#34;了不起的爹地 图集&#34; itemprop=&#34;image&#34;&gt;
+            &lt;/p&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&#34;photo-box&#34;&gt;
+            &lt;p class=&#34;photo-box-inner&#34;&gt;
+                &lt;img class=&#34;photo&#34; src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201114145925.webp&#34; alt=&#34;了不起的爹地 图集&#34; itemprop=&#34;image&#34;&gt;
+            &lt;/p&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&#34;photo-box&#34;&gt;
+            &lt;p class=&#34;photo-box-inner&#34;&gt;
+                &lt;img class=&#34;photo&#34; src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201114145923.webp&#34; alt=&#34;了不起的爹地 图集&#34; itemprop=&#34;image&#34;&gt;
+            &lt;/p&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;h3 id=&#34;1114&#34;&gt;11.14&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;心心念念喝酒去 $\checkmark$&lt;/li&gt;
+&lt;li&gt;欣赏音乐剧&lt;code&gt;Les Misérables&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1115&#34;&gt;11.15&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看凡人修仙传 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;十一月第三周&#34;&gt;十一月第三周&lt;/h2&gt;
+&lt;h3 id=&#34;1116&#34;&gt;11.16&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看凡人修仙传 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1117&#34;&gt;11.17&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看凡人修仙传 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1118&#34;&gt;11.18&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看凡人修仙传 $\checkmark$&lt;/li&gt;
+&lt;li&gt;看电视剧&lt;code&gt;亮剑&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结
+&lt;ul&gt;
+&lt;li&gt;为善是超脱桎梏的良方&lt;/li&gt;
+&lt;li&gt;做事专一，从来如此。多线并行，高效稳定。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1119&#34;&gt;11.19&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看电视剧&lt;code&gt;亮剑&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1120&#34;&gt;11.20&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看小说&lt;code&gt;亮剑&lt;/code&gt; $\checkmark$&lt;/li&gt;
+&lt;li&gt;做每周小组展示 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;十年浩劫，诚非虚言&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1121&#34;&gt;11.21&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看&lt;code&gt;大动乱的时代&lt;/code&gt; $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201121182204.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1122&#34;&gt;11.22&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;给wq讲领域自适应&lt;/li&gt;
+&lt;/ul&gt;</description>
+  <pubDate>Mon, 09 Nov 2020 21:26:36 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/11/english/</guid>
+</item>
+
+<item>
+  <title>入组学艺</title>
+  <link>https://www.liulp.club/2020/10/teacher_student/</link>
+    <description>&lt;p&gt;静下心来，在组里积累成长。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;十月第五周&#34;&gt;十月第五周&lt;/h2&gt;
+&lt;h3 id=&#34;1026&#34;&gt;10.26&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;学习&lt;code&gt;Normalizing Flows&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;学习&lt;code&gt;Diffusion Probabilistic Models&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201026195029.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1027&#34;&gt;10.27&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;了解&lt;code&gt;Face Swapping&lt;/code&gt;模型&lt;code&gt;FaceShifter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;了解&lt;code&gt;NLP&lt;/code&gt;中的&lt;code&gt;Knowledge-enhanced text generation&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201027111650.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;了解&lt;code&gt;Graph Network&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201027225743.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;Just as biology does not choose between nature versus nurture—it uses nature and nurture jointly, to build wholes which are greater than the sums of their parts—we, too, reject the notion that structure and flexibility are somehow at odds or incompatible, and embrace both with the aim of reaping their complementary strengths.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1028&#34;&gt;10.28&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;整理 &lt;code&gt;Distillation&lt;/code&gt;相关的论文&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;$$f_s=\mathop{arg\ min}\limits_{f\in \mathcal{F}_s}\frac{1}{n}\sum_{i=1}^n[(1-\lambda)l(y_i,\sigma(f(x_i)))+\lambda l(s_i,\sigma(f(x_i)))] \text{, } s_i=\sigma(f_t(x_i)/T)$$&lt;/p&gt;
+&lt;h3 id=&#34;1029&#34;&gt;10.29&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;了解&lt;code&gt;Jun Zhu&lt;/code&gt;老师组的工作&lt;/li&gt;
+&lt;li&gt;阅读&amp;quot;Understanding and Stabilizing GANs’ Training Dynamics using Control Theory&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;GAN的动力系统分析着实令人耳目一新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1030&#34;&gt;10.30&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读&amp;quot;Stein Variational Gradient Descent: A General Purpose Bayesian Inference Algorithm&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;终于把自审表交掉了，拖延症啊&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1031&#34;&gt;10.31&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;成功躺尸养病的一天 $\checkmark$&lt;/li&gt;
+&lt;li&gt;看lol决赛 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;这看了不多比赛，成功看到了lpl决赛首次让二追三，成功看到lol决赛首次五杀，可是名场面&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201101130709.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1101&#34;&gt;11.01&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;参加体测 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;体测成功丢掉半条小命……&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;十一月第一周&#34;&gt;十一月第一周&lt;/h2&gt;
+&lt;h3 id=&#34;1102&#34;&gt;11.02&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;整理宿舍，焕然一新！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1103&#34;&gt;11.03&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;跟x老师说明情况，毕设还是跟z老师 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1104&#34;&gt;11.04&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;关注美国大选 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201104115200.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1105&#34;&gt;11.05&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;完成毕设选题&lt;/li&gt;
+&lt;li&gt;准备周五的报告&lt;/li&gt;
+&lt;li&gt;了解r学长的&lt;code&gt;PopMAG&lt;/code&gt; $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;和z老师吃午饭，感觉之前一些误解消散了~~&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1106&#34;&gt;11.06&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;做组内报告 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1107&#34;&gt;11.07&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;听竺院十佳歌手决赛&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1108&#34;&gt;11.08&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;准备前言的讲课 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;</description>
+  <pubDate>Mon, 26 Oct 2020 09:48:21 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/10/teacher_student/</guid>
+</item>
+
+<item>
+  <title>论文论文</title>
+  <link>https://www.liulp.club/2020/10/paper123/</link>
+    <description>&lt;p&gt;加入r学长的组做&lt;code&gt;TTS&lt;/code&gt;，加油啊&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;十月第三周&#34;&gt;十月第三周&lt;/h2&gt;
+&lt;h3 id=&#34;1012&#34;&gt;10.12&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;联系r学长，确认进组 $\checkmark$&lt;/li&gt;
+&lt;li&gt;读《流畅的Python》第一二章 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1013&#34;&gt;10.13&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;学习&lt;code&gt;Tacotron&lt;/code&gt;和&lt;code&gt;Tacotron2&lt;/code&gt; $\checkmark$&lt;/li&gt;
+&lt;li&gt;发现了宝藏网站 &lt;a href=&#34;https://paperswithcode.com/&#34;&gt;Papers with Code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;多多关注人工智能各个方向的工作欧！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201013192400.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1014&#34;&gt;10.14&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;颓废了一天，过……&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1015&#34;&gt;10.15&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;读&lt;code&gt;Tacotron2&lt;/code&gt;源码 $\checkmark$&lt;/li&gt;
+&lt;li&gt;读《流畅的Python》第三章 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;学习然后玩耍！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1016&#34;&gt;10.16&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;首次参加&lt;code&gt;TTS&lt;/code&gt;组会 $\checkmark$&lt;/li&gt;
+&lt;li&gt;阅读&lt;code&gt;Domain Adaptation&lt;/code&gt;相关的论文 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201017102217.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1017&#34;&gt;10.17&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读&lt;code&gt;Domain Adaptation&lt;/code&gt;相关的论文 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201017231444.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;MDD&lt;/code&gt;使用&lt;code&gt;GradientReverseLayer&lt;/code&gt;模拟&lt;code&gt;minmax&lt;/code&gt;类型的优化&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1018&#34;&gt;10.18&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;继续阅读&lt;code&gt;Domain Adaptation&lt;/code&gt;相关的论文 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;十月第四周&#34;&gt;十月第四周&lt;/h2&gt;
+&lt;h3 id=&#34;1019&#34;&gt;10.19&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;分析&lt;code&gt;MDD&lt;/code&gt;源代码 $\checkmark$&lt;/li&gt;
+&lt;li&gt;使用&lt;code&gt;MDD&lt;/code&gt;作为原型实现特化迁移学习 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1020&#34;&gt;10.20&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;使用&lt;code&gt;MDD&lt;/code&gt;作为原型实现特化迁移学习 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;成功在原模型基础上，在&lt;code&gt;D2A&lt;/code&gt;情形提升了两个多点!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201021122423.png class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1021&#34;&gt;10.21&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;总结迁移学习最新进展，并制作ppt $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;准备好明天做展示，激动地搓搓小手~~&lt;/li&gt;
+&lt;li&gt;第一次去学校健身房健身~~&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1022&#34;&gt;10.22&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;联系找毕设导师 $\Rightarrow$&lt;/li&gt;
+&lt;li&gt;讲解领域自适应 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;既然有想法，为什么不去实现呢？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1023&#34;&gt;10.23&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;使用新模型实践我的想法 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;ljl学长真的nice!&lt;/li&gt;
+&lt;li&gt;目标&lt;code&gt;office31&lt;/code&gt;数据集最差情况准确率超过80%&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1024&#34;&gt;10.24&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看TES与SN的半决赛&lt;/li&gt;
+&lt;li&gt;接触&lt;code&gt;Normalizing Flows&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;跑了一个&lt;code&gt;SOTA&lt;/code&gt;，结果是跑的另一个情形的结果，真的搞心态啊！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1025&#34;&gt;10.25&lt;/h3&gt;</description>
+  <pubDate>Tue, 13 Oct 2020 19:06:54 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/10/paper123/</guid>
+</item>
+
+<item>
+  <title>申请札记</title>
+  <link>https://www.liulp.club/2020/10/offer_get/</link>
+    <description>&lt;p&gt;一个月的申请在昨天填报志愿后最终告一段落，写点什么记录我的申请季吧。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;p&gt;8月30日，我给z老师发出了申请人工智能方向的邮件，也许多年以后，我才能真正明白那一刻的意义吧。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201012101342.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;数学行&#34;&gt;数学行&lt;/h2&gt;
+&lt;p&gt;今年暑假，我跟随罗格斯的s教授进行了一个暑假的暑期科研，研究双曲几何相关的问题。因为疫情没法前往美国，我们商量通过邮件的方式进行交流。&lt;/p&gt;
+&lt;p&gt;研究从五月份就断断续续地展开了，因为今年暑假格外的长，我有充足的时间进行暑期科研。先后阅读了 J. Kahn 和 V. Markovic 的 &amp;ldquo;Immersing almost geodesic surfaces in a closed hyperbolic three manifold&amp;rdquo; 和 Ursula Hamenstädt 的 &amp;ldquo;Incompressible
+Surfaces in Rank One Locally Symmetric Spaces&amp;rdquo; 两篇论文。在学习的过程中，我时而为学到新的方法而欢喜鼓舞，但很多时候，我都被一种悲伤的情绪所笼罩，很难集中精力打起精神来学习。感觉纯数学的科学研究充满了挑战，但是我很难跟这种挑战产生灵魂的共鸣。老班w老师得知我转行时问我，做出了这样的成果，你会发自内心的快乐和满足么？我的答案并不那么肯定。&lt;/p&gt;
+&lt;p&gt;回想起自己小学第一次拿起奥赛课本学习鸡兔同笼问题，为了研究明白，反复思索许久，最终理解其中应有之义。总是内心想着做最厉害的数学人，那是不是应该什么都一点即通，一学就会。现在想来，我总是被这个自己想出来的标准，搞得忧心忡忡，而一定程度上忽视了数学本身的美。与数学度过了十余年的时光，感觉自己还是困在这个自己设定的牢笼里。如今，真的走远了，可能更能用一个旁观者的角度，去思考当年的我吧。&lt;/p&gt;
+&lt;h2 id=&#34;决定转行&#34;&gt;决定转行&lt;/h2&gt;
+&lt;p&gt;暑研接近尾声的时候，我渐渐清晰了转行的想法。综合目前跨学科背景薄弱，自己的兴趣方面和浙大计算机的强势。做出留在浙大读人工智能的硕士并不是个很难的决定了。&lt;/p&gt;
+&lt;p&gt;决定转行后，我也咨询了认识的老师，学长还有同学，具体了解了计院对数学背景学生的欢迎程度。感觉确实自己的背景是蛮受欢迎的，也一定程度上弥补了我计算机方向的背景薄弱，这更给了我转行的信心。通过同学推荐，我了解到了z老师，其实说来有趣，我认定他的原因是他那甚至还有点稚气照片让我觉得此人肯定很投缘，想来自己也许是个颜控吧。现在想来，z老师也确实在我紧张的申请时间里给到了我很多的帮助。可以说自己的运气现在开来还蛮不错的。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201012105017.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;极限申请&#34;&gt;极限申请&lt;/h2&gt;
+&lt;p&gt;其实我决定转的时间实在是太晚了，很多外校的申请已经截止了。倒是我本就打算申请本校，所以也没有感觉太过遗憾。由于申请考试的具体时间因为疫情拖延迟迟没有确定，我也准备的有点动力不足。到软院发通知准备机试面试的时候，只给我留了三天半的时间，而这之前我还兴冲冲地参加高联阅卷，去赚了两天快钱。然后注定是极限操作啦……&lt;/p&gt;
+&lt;p&gt;软院的机试我做的并不顺利，第一题多项式的模拟，我把问题想复杂了。谁让自己之前做多项式乘法的时候没有把点都跑过，就有点小忐忑。花了不少时间，加上犯了一个直接想不到的循环的错误，倒是没能拿全分。第二题是一个算法题，我开始给出了一个简洁的方法，但是最后一步把问题想的太简单了，只跑对了一部分的点。临进结束想到了做法，可惜需要改动不小，只能作罢。第三题是练的最熟的格式化的问题，花了时间成功满分，这也是我唯一满分的题目。第四题是一个控制复杂度的问题，时间不够，我只好无脑做了，也拿到了不少的分数。这一番操作，最后得了70分，考完都有点心态不好了。&lt;/p&gt;
+&lt;p&gt;晚上，难以安心给z老师发了邮件表示自己录取困难了。z老师，看到邮件立刻给我打来电话，安慰我没问题，还帮我出谋划策，润色简历。甚至第二天还帮我联系了一个学长，为我辅导面试。真的很感谢老师和学长的帮助，让我抗过了压力最大的几天。&lt;/p&gt;
+&lt;p&gt;机试后是面试，我的ppt被z老师一顿批评，当时信心满满的我有点爆炸，最后我还是决定按着自己的style来。所幸面试的时候，软院的老师可能也非常理解我这样的学生的情况，并没有难为我，进行的非常的顺利。面试完z老师问了一下面试的情况，表示我基本稳了。但是不到真正录取，这谁都说不好的，几天后，排名公布，心中的大石头才最后落下了。&lt;/p&gt;
+&lt;p&gt;现在想来，那几天的生活是真的魔幻的很，而我真的度过了那几天。&lt;/p&gt;
+&lt;h2 id=&#34;研究计划&#34;&gt;研究计划&lt;/h2&gt;
+&lt;p&gt;正式录取后，跟老师聊了之后的计划。大四我先跟着学长做项目（全组也没有一个学姐，大雾），争取一个三作。为了今后读博的话，考出TOEFL和GRE，不要到正式进如研究阶段还要为这个分心。真的到了研究阶段，就是自己干了，老师希望我能在研究生阶段发5篇paper，当然他还说了些竺奖国奖的期许，哈哈哈哈。他很为自己的学生年年国奖而骄傲，哎，真像个孩子啊。&lt;/p&gt;
+&lt;p&gt;目前我还在看简单的&lt;code&gt;Pytorch&lt;/code&gt;和&lt;code&gt;Python&lt;/code&gt;。计划接下来就跟学长做语音方面的深度学习问题。接下来，就看我的啦。&lt;/p&gt;
+&lt;p&gt;昨天晚上，正式在录取系统里，填完了自己的志愿，录取到浙江大学软件学院，算是为自己的申请季画上了圆满的句号。看到pyq很多成功录取到清北的同学，不过我已经不是当年那个考败来浙的悲伤青年，由衷地为他们感到高兴。希望大家都能在今后的学习生活中收获自己的成长吧，加油，少年！&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201012113336.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;</description>
+  <pubDate>Mon, 12 Oct 2020 09:52:59 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/10/offer_get/</guid>
+</item>
+
+<item>
+  <title>再出发</title>
+  <link>https://www.liulp.club/2020/09/once_more/</link>
+    <description>&lt;blockquote&gt;
+&lt;p&gt;要学好人工智能，首先要养成良好的学习习惯&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;十月第一周&#34;&gt;十月第一周&lt;/h2&gt;
+&lt;h3 id=&#34;0928&#34;&gt;09.28&lt;/h3&gt;
+&lt;h3 id=&#34;0929&#34;&gt;09.29&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;参见数院保研大会 $\checkmark$&lt;/li&gt;
+&lt;li&gt;获得软件学院录取名额 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0930&#34;&gt;09.30&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;学习&lt;a href=&#34;https://tangshusen.me/Dive-into-DL-PyTorch/#/&#34;&gt;《动手学深度学习》&lt;/a&gt; $\checkmark$&lt;/li&gt;
+&lt;li&gt;坐飞机回家啦~~&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201003220917.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1001&#34;&gt;10.01&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;参加表哥婚礼筹备 $\checkmark$&lt;/li&gt;
+&lt;li&gt;会亲家饭局凑热闹 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1002&#34;&gt;10.02&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;参加表哥婚礼 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201003221440.jpg class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1003&#34;&gt;10.03&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;学习《动手学深度学习》$\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1004&#34;&gt;10.04&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;回学校啦 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;十月第二周&#34;&gt;十月第二周&lt;/h2&gt;
+&lt;h3 id=&#34;1005&#34;&gt;10.05&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;入手大屏显示器 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;大显示器是真的舒服&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1006&#34;&gt;10.06&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;去图书馆借书会看么测试 $\checkmark$&lt;/li&gt;
+&lt;li&gt;阅读 &lt;a href=&#34;https://ieeexplore.ieee.org/document/6870486&#34;&gt;&amp;ldquo;High-Speed Tracking with Kernelized Correlation Filters&amp;rdquo;&lt;/a&gt; $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;阅读论文有收获！也要循序渐进，不要太心急欧~~&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1007&#34;&gt;10.07&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;阅读 &lt;a href=&#34;https://arxiv.org/abs/1706.03762&#34;&gt;&amp;ldquo;Attention Is All You Need&amp;rdquo;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;学习&lt;code&gt;Word2Vec&lt;/code&gt;模型&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201007142100.png class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1008&#34;&gt;10.08&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复现&lt;code&gt;Word2Vec&lt;/code&gt;模型代码 $\Rightarrow$&lt;/li&gt;
+&lt;li&gt;咨询计院和软院的区别 $\checkmark$&lt;/li&gt;
+&lt;li&gt;服务器安装&lt;code&gt;aria2&lt;/code&gt;+&lt;code&gt;OneDriveUploader&lt;/code&gt; $\checkmark$&lt;/li&gt;
+&lt;li&gt;网站进行SEO优化 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;你忙就别约今天么。好吧，就当你忙还愿意帮我解决问题的好人了&lt;/li&gt;
+&lt;li&gt;想找最新的词典mdx文件，发现都要收费了，网络免费时代真的过去了&lt;/li&gt;
+&lt;li&gt;看看这次百度和Bing能不能收录更多页面&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1009&#34;&gt;10.09&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复现&lt;code&gt;Word2Vec&lt;/code&gt;模型代码&lt;/li&gt;
+&lt;li&gt;和z学长约饭讨论人工智能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;1010&#34;&gt;10.10&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;两天通关&amp;quot;隐形守护者&amp;rdquo;，太好玩了吧！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;为什么老是猜不透女人的心思啊，大雾&lt;/li&gt;
+&lt;li&gt;在理想主义者眼中，什么都是马尔可夫链&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201010212414.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;1011&#34;&gt;10.11&lt;/h3&gt;</description>
+  <pubDate>Sun, 27 Sep 2020 21:35:16 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/09/once_more/</guid>
+</item>
+
+<item>
+  <title>申请季</title>
+  <link>https://www.liulp.club/2020/09/application/</link>
+    <description>&lt;blockquote&gt;
+&lt;p&gt;开学纪实&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;九月第三周&#34;&gt;九月第三周&lt;/h2&gt;
+&lt;h3 id=&#34;0913&#34;&gt;09.13&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习抽象代数，表示论 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0914&#34;&gt;09.14&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;学分转换 $\checkmark$&lt;/li&gt;
+&lt;li&gt;复习表示论，实变函数 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0915&#34;&gt;09.15&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;过一下：微分流形，实变函数 $\checkmark$&lt;/li&gt;
+&lt;li&gt;复习李群李代数 $\checkmark$&lt;/li&gt;
+&lt;li&gt;复习人工智能 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0916&#34;&gt;09.16&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;保研面试 $\checkmark$&lt;/li&gt;
+&lt;li&gt;确定软院申请的问题 (ddl!) $\checkmark$&lt;/li&gt;
+&lt;li&gt;提交学分转换材料，争取英语水平测试成绩 $\Rightarrow$&lt;/li&gt;
+&lt;li&gt;退选课 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0917&#34;&gt;09.17&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;提交学分转换材料 $\checkmark$&lt;/li&gt;
+&lt;li&gt;软院免研申请 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;终于完成学分转换了，拖延症晚期&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0918&#34;&gt;09.18&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;高中联赛批卷 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0919&#34;&gt;09.19&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;高中联赛批卷 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200928002014.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;0920&#34;&gt;09.20&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;准备软件学院机试 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;发现23号机试，冲啊!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;九月第四周&#34;&gt;九月第四周&lt;/h2&gt;
+&lt;h3 id=&#34;0921&#34;&gt;09.21&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;准备软件学院机试 $\checkmark$&lt;/li&gt;
+&lt;li&gt;学习常见的算法 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0922&#34;&gt;09.22&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;准备软件学院机试 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0923&#34;&gt;09.23&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;填写计算机学院硕士申请 $\Rightarrow$&lt;/li&gt;
+&lt;li&gt;参加PAT考试 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;我只能说，循环条件被改这种错误我是没想到的&lt;/li&gt;
+&lt;li&gt;联系赵洲老师问保研的事，老师人好啊！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0924&#34;&gt;09.24&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;跟黄学长了解&lt;a href=&#34;https://en.wikipedia.org/wiki/Differential_privacy&#34;&gt;差分隐私&lt;/a&gt; $\checkmark$&lt;/li&gt;
+&lt;li&gt;填写计算机学院硕士申请 $\checkmark$&lt;/li&gt;
+&lt;li&gt;联系数院和竺院询问保研名额 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;赵老师和黄学长人真好，我也要加油干啊！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200927221554.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;0925&#34;&gt;09.25&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;完成软件学院自述ppt $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0926&#34;&gt;09.26&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;求数聚会 $\checkmark$&lt;/li&gt;
+&lt;li&gt;准备软件学院面试  $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0927&#34;&gt;09.27&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;软件学院面试 $\checkmark$&lt;/li&gt;
+&lt;li&gt;约啤酒局  $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;面试顺利完成！！！&lt;/li&gt;
+&lt;li&gt;3L扎啤真的顶，走起路来轻飘飘~~&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200927215336.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;</description>
+  <pubDate>Sat, 12 Sep 2020 21:49:47 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/09/application/</guid>
+</item>
+
+<item>
+  <title>远程下载视频成m3u8形式</title>
+  <link>https://www.liulp.club/2020/08/m3u8/</link>
+    <description>&lt;p&gt;成功使用远程下载自动切片m3u8，且实现在线播放。&lt;/p&gt;
+&lt;h2 id=&#34;技术博客&#34;&gt;技术博客&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jianshu.com/p/273bdb4c240b&#34;&gt;mp4切片m3u8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ffmpeg.org/&#34;&gt;ffmpeg&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/482/&#34;&gt;aria2远程下载&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/1006/&#34;&gt;远程上传到onedrive&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/boyit0/article/details/88579330&#34;&gt;video.js实现m3u8播放&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;实现过程&#34;&gt;实现过程&lt;/h2&gt;
+&lt;h3 id=&#34;服务器端代码&#34;&gt;服务器端代码：&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+GID&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$1&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;;
+FileNum&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$2&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;;
+File&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$3&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;;
+MinSize&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;5&amp;#34;&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;#限制最低上传大小，默认5k&lt;/span&gt;
+MaxSize&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;15728640&amp;#34;&lt;/span&gt;;
+Thread&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;5&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;#默认3线程，自行修改，服务器配置不好的话，不建议太多&lt;/span&gt;
+Block&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;15&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;#默认分块20m，自行修改&lt;/span&gt;
+RemoteDIR&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;cloud&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;#上传到Onedrive的路径，默认为根目录，如果要上传到MOERATS目录，&amp;#34;&amp;#34;里面请填成MOERATS&lt;/span&gt;
+LocalDIR&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/caddy/www/aria2/Download&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;#Aria2下载目录，记得最后面加上/&lt;/span&gt;
+Uploader&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/usr/local/bin/OneDriveUploader&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;#上传的程序完整路径，默认为本文安装的目录&lt;/span&gt;
+Config&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/root/auth.json&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;#初始化生成的配置auth.json绝对路径，参考第3步骤生成的路径&lt;/span&gt;
+
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 调用ffmpeg&lt;/span&gt;
+cd /usr/local/caddy/www/aria2/Download
+&lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; files in &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;ls&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;do&lt;/span&gt;
+    &lt;span style=&#34;color:#75715e&#34;&gt;# 截取文件名的前两个字符&lt;/span&gt;
+    object&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;files&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;;
+    fname&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;files%.*&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;;
+    &lt;span style=&#34;color:#75715e&#34;&gt;# 截取文件的后四个字符&lt;/span&gt;
+    bname&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;files:0-3&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;;
+    &lt;span style=&#34;color:#75715e&#34;&gt;# 拼接成文件名&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt; $bname &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mp4 &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;;&lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
+        mkdir $fname;
+        ffmpeg -i $object -c copy -bsf:v h264_mp4toannexb cs.ts
+        ffmpeg -i cs.ts -c copy -map &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; -f segment -segment_list ‘$fname/cs.m3u8’ -segment_time &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt; ‘$fname/cs-%03d.ts’
+        rm cs.ts
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;done&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; -z &lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$FileNum&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; |grep -o &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[0-9]*&amp;#39;&lt;/span&gt; |head -n1&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; FileNum&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$FileNum&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -le &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; exit 0; &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$#&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; !&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;3&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; exit 0; &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; LoadFile&lt;span style=&#34;color:#f92672&#34;&gt;(){&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; ! -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;Uploader&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+  IFS_BAK&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$IFS
+  IFS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;$&amp;#39;\n&amp;#39;&lt;/span&gt;
+  tmpFile&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;File/#$LocalDIR&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; |cut -f1 -d&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+  FileLoad&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;LocalDIR&lt;span style=&#34;color:#e6db74&#34;&gt;}${&lt;/span&gt;tmpFile&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; ! -e &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FileLoad&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+  ItemSize&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;du -s &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FileLoad&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; |cut -f1 |grep -o &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;[0-9]*&amp;#39;&lt;/span&gt; |head -n1&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; -z &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$ItemSize&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$ItemSize&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -ge &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;$MaxSize&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
+    echo -ne &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\033[33m&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FileLoad&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt; \033[0mtoo large to spik.\n&amp;#34;&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+  &lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;Uploader&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt; -c &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;Config&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -t &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;Thread&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -b &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;Block&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -s &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FileLoad&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -r &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;RemoteDIR&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt; -skip
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;[[&lt;/span&gt; $? &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;0&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;]]&lt;/span&gt;; &lt;span style=&#34;color:#66d9ef&#34;&gt;then&lt;/span&gt;
+    rm -rf &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;FileLoad&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;fi&lt;/span&gt;
+  IFS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$IFS_BAK
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+LoadFile;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;前端代码&#34;&gt;前端代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;m3u8iframe&amp;#34;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.liulp.club/m3u8/index.html?url=https://drive.liulp.club/Download/{{.Get 0 }}/cs.m3u8&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;600&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;allowfullscreen&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;frameborder&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;scrolling&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;no&amp;#39;&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;效果&#34;&gt;效果&lt;/h2&gt;
+&lt;!-- &lt;iframe id=&#34;m3u8iframe&#34;  src=&#34;https://www.liulp.club/m3u8/index.html?url=//cdn.jsdelivr.net/gh/CS123n/source@master/video/You_Belong_with_Me/cs.m3u8&#34;
+    width=&#34;100%&#34; height=&#34;600&#34; allowfullscreen=&#34;true&#34; frameborder=&#34;0&#34; scrolling=&#39;no&#39;&gt;
+&lt;/iframe&gt; --&gt;
+&lt;ul&gt;
+&lt;li&gt;You Belong with Me&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?You_Belong_with_Me&amp;m3u8&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;黑神话悟空&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?%e9%bb%91%e7%a5%9e%e8%af%9d%e6%82%9f%e7%a9%ba&amp;m3u8&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;</description>
+  <pubDate>Tue, 18 Aug 2020 19:17:28 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/08/m3u8/</guid>
+</item>
+
+<item>
+  <title>服务器配置相关</title>
+  <link>https://www.liulp.club/2020/08/baota/</link>
+    <description>&lt;p&gt;阿里云服务器启用宝塔面板，配合静态和php搭建各种网站。&lt;/p&gt;
+&lt;p&gt;本文记录我在阿里云和vultr的两台服务器的各种操作，这也是我独门的减压的方法吧。都挺好，就是越弄时间越少，压力越大啊。一直摸鱼可不会一直爽，咳咳。&lt;/p&gt;
+&lt;h2 id=&#34;我的网站&#34;&gt;我的网站&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://vultr.liulp.club&#34;&gt;PyOne&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://analytic.liulp.club&#34;&gt;Matomo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://aria.liulp.club&#34;&gt;Aria2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://short.liulp.club/&#34;&gt;Shlink&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;API:f98138fa-6afb-4d7e-9245-749e0787495d &lt;i class=&#34;fa fa-copy&#34; id=&#39;copyto&#39; onclick=&#34;copyapi()&#34; title=&#34;复制API到剪贴板&#34;&gt;&lt;/i&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://wekan.liulp.club/&#34;&gt;wekan&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://next.liulp.club/&#34;&gt;Nextcloud&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://drive.liulp.club/&#34;&gt;Onemanager&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://img.liulp.club/&#34;&gt;Chevereto&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://baota.liulp.club&#34;&gt;宝塔面板&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;当然，我是不会告诉你怎么进入我的后台的，哈哈&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;技术博客&#34;&gt;技术博客&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.aliyun.com/ask/233242?spm=a2c6h.13524658&#34;&gt;宝塔初始化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/gelandesprung/p/12019157.html&#34;&gt;Docker文件操作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://www.daniao.org/7523.html&#34;&gt;安装Matomo&lt;/a&gt;&lt;/del&gt;
+&lt;ul&gt;
+&lt;li&gt;对于依赖版本要求非常准确，对最新版适配欠缺&lt;/li&gt;
+&lt;li&gt;需要进如Docker内部开启https&lt;/li&gt;
+&lt;li&gt;不支持默认中文目录&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://matomo.org/docs/installation/#start-the-installation&#34;&gt;安装官方matomo&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;官方的真的简洁又好用！！！还能正常连接数据库！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/799/&#34;&gt;安装PyOne&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker版是阉割版&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/806/&#34;&gt;一键安装脚本&lt;/a&gt;非常好用，建议可以弄单独的服务器运行&lt;/li&gt;
+&lt;li&gt;Caddy运行失败，使用&lt;a href=&#34;https://www.moerats.com/archives/409/&#34;&gt;Caddy安装脚本&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/750/&#34;&gt;安装Aria2&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;配合图形界面和上传工具使用更佳&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://www.moerats.com/archives/956/&#34;&gt;安装lstu短链&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://shlink.io/documentation/&#34;&gt;安装shlink短链&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;直接使用Docker安装，官方配套web控制台&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.azimiao.com/5503.html&#34;&gt;安装wekan看板&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;穿透要挂到内网里，使用公网ip就是普通转代了……&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nextcloud.com/install/#&#34;&gt;安装Nextcloud&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;用心的&lt;a href=&#34;https://www.jianshu.com/p/4fd537c80d87&#34;&gt;配置优化&lt;/a&gt;教程&lt;/li&gt;
+&lt;li&gt;Owncloud安卓端居然收费，直接用Nextcloud&lt;/li&gt;
+&lt;li&gt;Nextcloud的插件好动心啊，可惜加载太慢，存在问题&lt;/li&gt;
+&lt;li&gt;Nextcloud还支持webdav，一直想用，可惜国内支持的软件有限&lt;/li&gt;
+&lt;li&gt;Nextcloud的插件生态简直了，都是什么神仙配置！！！爱了&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/1006/&#34;&gt;Onedrive离线下载&lt;/a&gt;，无UI版
+&lt;ul&gt;
+&lt;li&gt;使用此插件加上&lt;a href=&#34;http://www.jsoo.cc/82019223.html&#34;&gt;aria2&lt;/a&gt;，实现离线下载&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.liuxinggang.com/archives/gethook_hexo_vps.html&#34;&gt;博客服务器自动部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script&gt;
+    function copyapi(){
+        var clipBoardContent=&#34;78e166d6-7fcb-4ac5-b1a2-57e992a1bc28&#34;;
+        if(window.clipboardData){
+            window.clipboardData.setData(&#39;text&#39;,clipBoardContent);
+        }else{
+            (function(clipBoardContent){
+                document.oncopy=function(e){
+                    e.clipboardData.setData(&#39;text&#39;,clipBoardContent);
+                    e.preventDefault();
+                    document.oncopy=null;
+                }
+            })(clipBoardContent);
+            document.execCommand(&#39;Copy&#39;);
+        }
+        alert(&#39;成功复制API到剪贴板&#39;);
+    };
+&lt;/script&gt;</description>
+  <pubDate>Thu, 13 Aug 2020 10:26:36 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/08/baota/</guid>
+</item>
+
+<item>
+  <title>夏末与初秋</title>
+  <link>https://www.liulp.club/2020/08/summer_to_fall/</link>
+    <description>&lt;blockquote&gt;
+&lt;p&gt;八月初，立秋至。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- toc --&gt;
+&lt;h2 id=&#34;八月第二周&#34;&gt;八月第二周&lt;/h2&gt;
+&lt;h3 id=&#34;0810&#34;&gt;08.10&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;读论文 $\checkmark$&lt;/li&gt;
+&lt;li&gt;安家开看 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;居然在家已经两周了&lt;/li&gt;
+&lt;li&gt;房似锦卖房真的敢，真的拼！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0811&#34;&gt;08.11&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;白嫖阿里云服务器&amp;amp;备案 $\checkmark$&lt;/li&gt;
+&lt;li&gt;读论文&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0812&#34;&gt;08.12&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;完成备案 $\checkmark$&lt;/li&gt;
+&lt;li&gt;阿里云自动部署 $\checkmark$&lt;/li&gt;
+&lt;li&gt;网站优化加速 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;今日小结：
+&lt;ul&gt;
+&lt;li&gt;浙江省的备案效率果然高！&lt;/li&gt;
+&lt;li&gt;运用&lt;code&gt;git hook&lt;/code&gt;进行自动部署&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;font&lt;/code&gt;运用预加载和本地加载相配合&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;08130825&#34;&gt;08.13~08.25&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;看完安家 $\checkmark$&lt;/li&gt;
+&lt;li&gt;寝室搬迁 $\checkmark$&lt;/li&gt;
+&lt;li&gt;建设网站 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;鸽了一段时间，咳咳，现在继续吧。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200826092456.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;八月第四周&#34;&gt;八月第四周&lt;/h2&gt;
+&lt;h3 id=&#34;0826&#34;&gt;08.26&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习科学计算 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0827&#34;&gt;08.27&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习科学计算 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0828&#34;&gt;08.28&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习李群李代数 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0829&#34;&gt;08.29&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习李群李代数 $\checkmark$&lt;/li&gt;
+&lt;li&gt;准备个人CV $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0830&#34;&gt;08.30&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习黎曼几何 $\checkmark$&lt;/li&gt;
+&lt;li&gt;联系导师保研 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;0831&#34;&gt;08.31&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;复习李群李代数 $\checkmark$&lt;/li&gt;
+&lt;li&gt;复习科学计算 $\checkmark$&lt;/li&gt;
+&lt;/ul&gt;</description>
+  <pubDate>Mon, 10 Aug 2020 09:15:52 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/08/summer_to_fall/</guid>
+</item>
+
+<item>
+  <title>pdf.js与iframe</title>
+  <link>https://www.liulp.club/2020/08/pdf_iframe/</link>
+    <description>&lt;p&gt;网站解锁iframe方案&lt;/p&gt;
+&lt;p&gt;iframe，简直是扩展的first choice，各种GitHub上的轮子用起来不要太舒服，配合shortcode更佳欧！&lt;/p&gt;
+&lt;h2 id=&#34;pdfjs内嵌网页&#34;&gt;pdf.js内嵌网页&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pdfiframe&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.liulp.club/pdf/web/viewer.html?file=https://cdn.jsdelivr.net/gh/CS123n/source@master/document/{{.Get 0 }}.pdf&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;iframe class=&#34;pdfiframe&#34; width=&#34;100%&#34; height=&#34;100%&#34; frameborder=&#34;0&#34;
+    src=&#34;https://alist.liulp.club/pdf/web/viewer.html?file=https://alist.liulp.club/d/Alidrive/Website/document/Terence_Tao_Analysis_I.pdf&#34; &gt;
+&lt;/iframe&gt;
+&lt;h2 id=&#34;epubjs内嵌网页&#34;&gt;epub.js内嵌网页&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;epubiframe&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;allowfullscreen&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.liulp.club/epub/index.html?bookPath=https://cdn.jsdelivr.net/gh/CS123n/source@master/document/{{.Get 0 }}.epub&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;iframe class=&#34;epubiframe&#34; width=&#34;100%&#34; height=&#34;600&#34; allowfullscreen=&#34;true&#34; frameborder=&#34;0&#34;
+    src=&#34;https://alist.liulp.club/epub/reader/?bookPath=https://alist.liulp.club/d/Alidrive/Website/document/%e8%ae%ba%e7%be%8e%e5%9b%bd%e7%9a%84%e6%b0%91%e4%b8%bb.epub&#34;
+&gt;&lt;/iframe&gt;
+
+&lt;!-- ## MD5密文内嵌
+```html
+&lt;iframe id=&#34;md5iframe&#34;
+    src=&#34;https://www.liulp.club/md5/decode.html?txt={{.Get 0 }}&#34;
+    width=&#34;100%&#34; height=&#34;300&#34; frameborder=&#34;0&#34;&gt;
+&lt;/iframe&gt;
+```
+
+&lt;iframe id=&#34;md5iframe&#34;
+    src=&#34;https://www.liulp.club/md5/decode.html?txt=prose_a&#34;
+    width=&#34;100%&#34; height=&#34;300&#34; frameborder=&#34;0&#34; &gt;
+&lt;/iframe&gt; --&gt;
+&lt;!-- ## pdfobject方法
+此方法无法适配手机浏览器
+```html
+&lt;object id= &#34;pdfcontainer&#34; data=&#39;&#39; 
+    type=&#39;application/pdf&#39; 
+    width=&#39;100%&#39; 
+    height=&#39;600px&#39;&gt;
+&lt;/object&gt;
+```
+&lt;object id= &#34;pdfcontainer&#34; data=&#39;https://cdn.jsdelivr.net/gh/CS123n/source@master/document/Terence_Tao_Analysis_I.pdf&#39; 
+    type=&#39;application/pdf&#39; 
+    width=&#39;100%&#39; 
+    height=&#39;600px&#39;&gt;
+&lt;/object&gt;
+ &lt;script&gt;
+    var ele = document.getElementById(&#39;pdfcontainer&#39;);
+    var he=Math.min(window.screen.availHeight*0.85, ele.offsetWidth*1.6);
+    ele.height = he;
+&lt;/script&gt; --&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;</description>
+  <pubDate>Sun, 02 Aug 2020 14:16:19 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/08/pdf_iframe/</guid>
+</item>
+
+</channel>
+</rss>

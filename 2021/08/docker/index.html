@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.68.3 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="刘路平">
+<meta name="keywords" content="">
+<meta name="description" content="Openwrt中有设置docker的需求，顺道学习一下docker的配置
+Openwrt中有设置docker的需求，顺道学习一下docker的配置
+Openwrt中有设置docker的需求，顺道学习一下docker的配置 Anyway，欢迎到访刘路平的主页！">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<meta http-equiv="expires" content="1200">
+
+<meta property="og:description" content="Openwrt中有设置docker的需求，顺道学习一下docker的配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker配置">
+<meta name="twitter:title" content="Docker配置">
+<meta property="og:url" content="https://www.liulp.club/2021/08/docker/">
+<meta property="twitter:url" content="https://www.liulp.club/2021/08/docker/">
+<meta property="og:site_name" content="刘路平的主页">
+<meta property="og:description" content="Openwrt中有设置docker的需求，顺道学习一下docker的配置">
+<meta name="twitter:description" content="Openwrt中有设置docker的需求，顺道学习一下docker的配置">
+<meta property="og:locale" content="zh-cn">
+
+  
+    <meta property="article:published_time" content="2021-08-03T17:46:55">
+  
+  
+    <meta property="article:modified_time" content="2022-03-25T18:22:21">
+  
+  
+  
+    
+      <meta property="article:section" content="博客">
+    
+  
+  
+    
+      <meta property="article:tag" content="技术">
+    
+      <meta property="article:tag" content="docker">
+    
+      <meta property="article:tag" content="homeassistant">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031604040.webp">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031604040.webp">
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031604041.webp">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031604041.webp">
+
+
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg">
+
+
+    <title>Docker配置  ➤  Openwrt中有设置docker的需求，顺道学习一下docker的配置</title>
+    
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/show.ico">
+    
+    
+
+    <link rel="canonical" href="https://www.liulp.club/2021/08/docker/">
+    
+    
+    <link rel="stylesheet" media="all" href="//cdn.jsdelivr.net/gh/CS123n/website@master/css/web_style.min.css" />
+    <link rel="preload" media="all"  href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+    
+    
+
+    
+      
+    
+    
+
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://www.liulp.club/">刘路平的主页</a>
+  </div>
+  <div class="search header-right-icon">
+    <i class="material-icons search-icon search-start"><i class="fa fa-chevron-left"></i></i>
+    <input type="text" class="search-input" placeholder="搜索" />
+    <i class="material-icons search-icon search-clear"><i class="fa fa-chevron-right"></i></i>
+  <div class="search-results" id="searchout" ></div>
+  </div>
+
+</header>
+
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://www.liulp.club/#about">
+          <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刘路平</h4>
+        
+          <h5 class="sidebar-profile-bio">我们必须知道，我们必将知道</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home "></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/categories/%E5%8D%9A%E5%AE%A2">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-skyatlas "></i>
+      
+      <span class="sidebar-button-desc">博文</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/categories/%E6%97%A5%E8%AE%B0">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-calendar-minus-o "></i>
+      
+      <span class="sidebar-button-desc">日记</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/liuluping0106" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:liuluping1119@gmail.com" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope"></i>
+      
+      <span class="sidebar-button-desc">Email</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/post/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+  <div class="post-header-cover
+              text-center
+              "
+       style="background-image:url('https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031604041.webp')"
+       data-behavior="5">
+    
+      <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      Docker配置
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-08-03T17:46:55&#43;08:00">
+        
+  
+  
+  
+  
+    2021年八月3日  
+  
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://www.liulp.club/categories/%e5%8d%9a%e5%ae%a2">博客</a>
+    
+  
+
+
+  </div>
+
+  <div class="post-meta">
+    <i><span id="jinrishici-sentence">
+      正在加载今日诗词...
+    </span></i>
+  </div>
+</div>
+    
+  </div>
+
+
+      <div id="main" data-behavior="5"
+        class="hasCover
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap" id="upper_ele">
+              <p>Openwrt中有使用docker的需求，顺道学习一下docker的配置。</p>
+<h2 id="空间挂载">空间挂载</h2>
+<p>openwrt默认是/opt和/overlay共用空间，因为文件格式等问题，docker在这种情况下只能使用vfs储存模式，占用空间大且速度慢。为此，在openwrt中分别为overlay和docker的opt分别分配空间并格式化为ext4格式，然后把/overlay和/opt分别挂载在上面，这样docker就会自动使用更好更快的overlay2储存模式。</p>
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif"
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032101457.webp class="lazyload" alt="未命名 刘路平的主页"/>
+</p>
+<p>另外，我还将一块移动硬盘挂载在/mnt/share，而且将它通过<code>Samba</code>进行网络共享，共享下局域网传文件速度还是很可观的。</p>
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif"
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032044324.webp class="lazyload" alt="未命名 刘路平的主页"/>
+</p>
+<h2 id="homeassistant">Homeassistant</h2>
+<p>首先是使用docker在openwrt中安装<code>Homeassistant</code>，这样就可以本地搭建智能家居服务器。<code>Homeassistant</code>使用<code>MQTT</code>协议的通信服务，所以还搭建了一个基于<code>MQTT</code>的开源服务器<code>Eclipse Mosquitto</code>的docker。</p>
+<ul>
+<li><a href="https://www.home-assistant.io/">Homeassistant</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/MQTT">MQTT</a></li>
+<li><a href="https://mosquitto.org/">Eclipse Mosquitto</a></li>
+</ul>
+<h3 id="mqtt">MQTT</h3>
+<p>首先设置配置文件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir -p /mosquitto/config
+mkdir -p /mosquitto/data
+mkdir -p /mosquitto/log
+nano /mosquitto/config/mosquitto.conf
+</code></pre></div><p>并在mosquitto.conf中添加</p>
+<pre><code>persistence true
+persistence_location /mosquitto/data
+log_dest file /mosquitto/log/mosquitto.log
+</code></pre><p>如果需要使用密码，因为我只在局域网提供服务，就没有添加用户名密码。在mosquitto.conf中添加</p>
+<pre><code>allow_anonymous false
+password_file /mosquitto/pwfile
+</code></pre><p>然后在容器启动后运行命令，添加用户admin以及密码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mosquitto_passwd -c /mosquitto/pwfile admin
+</code></pre></div><p>并授予目录权限</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">chmod -R <span style="color:#ae81ff">755</span> /mosquitto
+chmode -R <span style="color:#ae81ff">777</span> /mosquitto/log
+</code></pre></div><p>完成以上准备后，启动容器</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -d --name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mosquitto&#34;</span> --net<span style="color:#f92672">=</span>host <span style="color:#ae81ff">\</span>
+    -v /mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf <span style="color:#ae81ff">\</span>
+    -v /mosquitto/data:/mosquitto/data <span style="color:#ae81ff">\</span>
+    -v /mosquitto/log:/mosquitto/log <span style="color:#ae81ff">\</span>
+    eclipse-mosquitto:1.6.14
+</code></pre></div><p>要注意的是，一是最新版本的Eclipse Mosquitto 2无法被正常访问，所以建议使用1.6.14版本。二是在openwrt中的桥接模式，端口映射后被其他终端直接访问有问题，建议直接使用host模式，共享网络。</p>
+<h3 id="homeassistant-1">Homeassistant</h3>
+<p>接下来运行Homeassistant</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -d --name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;home-assistants&#34;</span> -p 8123:8123 <span style="color:#ae81ff">\</span>
+    -v /root/homeassistant/config:/config <span style="color:#ae81ff">\</span>
+    -v /mnt/share:/mnt/share <span style="color:#ae81ff">\</span>
+    homeassistant/home-assistant
+</code></pre></div><p>除了将配置文件进行映射，我还将我的分享目录进行了映射，这样就可以通过<code>Homeassistant</code>直接访问分享目录下的影视资源。</p>
+<h2 id="nginxphp">Nginx+PHP</h2>
+<p>为了为局域网添加Speedtest。刚开始打算直接添加Speedtest的docker，可惜出现了架构不兼容的问题</p>
+<pre><code>WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+</code></pre><p>为此，我决定曲线救国，使用docker搭建web服务器。开始打算使用集成好的docker镜像，最后还是决定使用docker-compose的方案。分别安装nginx和php的官方docker镜像，这两个镜像都没有架构兼容性问题。</p>
+<p>首先安装php</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -d --name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;web-php&#34;</span> -p 9000:9000 <span style="color:#ae81ff">\</span>
+    -v /root/nginx/webroot:/usr/share/nginx/html <span style="color:#ae81ff">\</span>
+    php:7.2-fpm
+</code></pre></div><p>其次添加nginx的配置文件conf.d</p>
+<pre><code>server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name localhost;
+
+    index index.php index.html;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    root /var/www/html;
+
+    set $virtualdir &quot;&quot;;
+    set $realdir &quot;&quot;;
+
+    if ($request_uri ~ ^/([^/]*)/.*$ ) {
+        set $virtualdir /$1;
+    }
+
+    if (-d &quot;$document_root$virtualdir&quot;) {
+        set $realdir &quot;${virtualdir}&quot;;
+    }
+
+    location / {
+        try_files $uri $uri/ $realdir/index.php?$args;
+    }
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 192.168.2.110:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
+</code></pre><p>其中，文件路径为/root/nginx/webroot。并且将</p>
+<pre><code>fastcgi_pass 192.168.2.110:9000;
+</code></pre><p>中的地址修改为php的运行位置。建议不要用桥接的地址，因为我发现每次重启后，桥接地址是可能发生变换的，建议端口映射后，直接使用局域网地址。</p>
+<p>然后运行nginx</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">docker run -d --name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;web-nginx&#34;</span> -p 8088:80 <span style="color:#ae81ff">\</span>
+    -v /root/nginx/conf.d:/etc/nginx/conf.d
+    -v /root/nginx/webroot:/usr/share/nginx/html
+    nginx:latest
+</code></pre></div><p>有个问题是，8080端口不能正常使用，建议使用自定义端口，譬如我用的8088端口。</p>
+<h3 id="speedtest">Speedtest</h3>
+<p>成功运行后，在文件目录，我的是/root/nginx/webroot，添加Speedtest的网站文件。并将example-singleServer-full.html重命名为默认文件index.html。然后就可以直接访问对应的网址测速了，我的是<a href="http://192.168.2.110:8088/speedtest/">192.168.2.110:8088/speedtest/</a>。</p>
+<ul>
+<li><a href="https://github.com/librespeed/speedtest">Speedtest</a></li>
+</ul>
+<p>当当当当，最终的测速效果如下</p>
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif"
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032017072.webp class="lazyload" alt="未命名 刘路平的主页"/>
+</p>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">推荐文章</span><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2021/08/homeassistant/">Homeassistant</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2021/08/openwrt_init/">Openwrt搭建</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2021/01/cors/">网站跨域设计</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2020/08/m3u8/">远程下载视频成m3u8形式</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br>
+
+<span class="text-color-light text-small">标签</span><br/>
+
+  <a class="tag tag--primary tag--small" href="https://www.liulp.club/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+
+  <a class="tag tag--primary tag--small" href="https://www.liulp.club/tags/docker/">docker</a>
+
+  <a class="tag tag--primary tag--small" href="https://www.liulp.club/tags/homeassistant/">homeassistant</a>
+
+
+
+
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/08/homeassistant/" data-tooltip="Homeassistant">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/08/openwrt_init/" data-tooltip="Openwrt搭建">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.liulp.club/2021/08/docker/&title=Docker%e9%85%8d%e7%bd%ae&summary=Openwrt%e4%b8%ad%e6%9c%89%e8%ae%be%e7%bd%aedocker%e7%9a%84%e9%9c%80%e6%b1%82%ef%bc%8c%e9%a1%ba%e9%81%93%e5%ad%a6%e4%b9%a0%e4%b8%80%e4%b8%8bdocker%e7%9a%84%e9%85%8d%e7%bd%ae">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.liulp.club/2021/08/docker/&title=Docker%e9%85%8d%e7%bd%ae&summary=Openwrt%e4%b8%ad%e6%9c%89%e8%ae%be%e7%bd%aedocker%e7%9a%84%e9%9c%80%e6%b1%82%ef%bc%8c%e9%a1%ba%e9%81%93%e5%ad%a6%e4%b9%a0%e4%b8%80%e4%b8%8bdocker%e7%9a%84%e9%85%8d%e7%bd%ae">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?url=https://www.liulp.club/2021/08/docker/&title=Docker%e9%85%8d%e7%bd%ae&summary=Openwrt%e4%b8%ad%e6%9c%89%e8%ae%be%e7%bd%aedocker%e7%9a%84%e9%9c%80%e6%b1%82%ef%bc%8c%e9%a1%ba%e9%81%93%e5%ad%a6%e4%b9%a0%e4%b8%80%e4%b8%8bdocker%e7%9a%84%e9%85%8d%e7%bd%ae">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+          <i class="fa fa-angle-double-up"></i>
+        
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  
+  
+
+  
+  
+  
+  <span class="copyrights">
+    &copy; 2022 刘路平 
+  </span> <i class="fa fa-coffee"></i> <a class="icp" rel="license noopener" href="https://beian.miit.gov.cn" target="_blank" style="color: #9eabb3;text-decoration:none">浙ICP备20029940号</a> • All Rights Reserved<br>
+  <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://gohugo.io" target="_blank"  title="由 Hugo 驱动" >
+    <span class="badge-subject">Powered</span><span class="badge-value bg-blue">Hugo</span></a>
+    </div>
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://github.com/kakawait/hugo-tranquilpeak-theme" target="_blank"  title="主题为 tranquilpeak" >
+    <span class="badge-subject">Theme</span><span class="badge-value bg-red">tranquilpeak</span></a>
+    </div>
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://www.jsdelivr.com/" target="_blank"  title="使用 jsdelivr's CDN">
+    <span class="badge-subject">CDN</span><span class="badge-value bg-brightgreen">&nbspjsDelivr</span></a>
+    </div>
+    
+    
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://tongji.baidu.com/" target="_blank"  title="使用 Matomo&Baidu">
+    <span class="badge-subject">Pv</span><span class="badge-value bg-orange" id='laout'>&nbsp</span></a>
+    </div>
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://github.com/CS123n/website" target="_blank"  title="运行在 GitHub＆Tencent" >
+    <span class="badge-subject">Survived</span><span class="badge-value bg-blueviolet" id="spantime">&nbsp</span></a>
+    </div>
+    </div>
+</footer>
+
+
+
+      </div>
+      <div id="mybottom">
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/08/homeassistant/" data-tooltip="Homeassistant">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/08/openwrt_init/" data-tooltip="Openwrt搭建">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.liulp.club/2021/08/docker/&title=Docker%e9%85%8d%e7%bd%ae&summary=Openwrt%e4%b8%ad%e6%9c%89%e8%ae%be%e7%bd%aedocker%e7%9a%84%e9%9c%80%e6%b1%82%ef%bc%8c%e9%a1%ba%e9%81%93%e5%ad%a6%e4%b9%a0%e4%b8%80%e4%b8%8bdocker%e7%9a%84%e9%85%8d%e7%bd%ae">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.liulp.club/2021/08/docker/&title=Docker%e9%85%8d%e7%bd%ae&summary=Openwrt%e4%b8%ad%e6%9c%89%e8%ae%be%e7%bd%aedocker%e7%9a%84%e9%9c%80%e6%b1%82%ef%bc%8c%e9%a1%ba%e9%81%93%e5%ad%a6%e4%b9%a0%e4%b8%80%e4%b8%8bdocker%e7%9a%84%e9%85%8d%e7%bd%ae">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?url=https://www.liulp.club/2021/08/docker/&title=Docker%e9%85%8d%e7%bd%ae&summary=Openwrt%e4%b8%ad%e6%9c%89%e8%ae%be%e7%bd%aedocker%e7%9a%84%e9%9c%80%e6%b1%82%ef%bc%8c%e9%a1%ba%e9%81%93%e5%ad%a6%e4%b9%a0%e4%b8%80%e4%b8%8bdocker%e7%9a%84%e9%85%8d%e7%bd%ae">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+          <i class="fa fa-angle-double-up"></i>
+        
+        </a>
+      </li>
+    </ul>
+  
+</div>
+ 
+      </div>
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.liulp.club%2F2021%2F08%2Fdocker%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https%3A%2F%2Fwww.liulp.club%2F2021%2F08%2Fdocker%2F">
+          <i class="fa fa-qq"></i><span>分享到 QQ空间</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?url=https%3A%2F%2Fwww.liulp.club%2F2021%2F08%2Fdocker%2F">
+          <i class="fa fa-weibo"></i><span>分享到 新浪微博</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-close"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刘路平</h4>
+    
+      <div id="about-card-bio">我们必须知道，我们必将知道</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        学生
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        浙江杭州
+      </div>
+    
+  </div>
+</div>
+
+    
+  
+    <div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201008214241.jpeg');"></div>
+  
+
+
+    
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/jquery-lazyload@1.9.7/jquery.lazyload.min.js" async="async" crossorigin="anonymous"></script>
+<script data-pjax-viewer src="//cdn.jsdelivr.net/npm/viewerjs@1.9.0/dist/viewer.min.js" async="async" crossorigin="anonymous"></script>
+
+
+
+
+<script src="//cdn.jsdelivr.net/gh/CS123n/website@master/js/web_script.min.js" async="async" crossorigin="anonymous"></script>
+
+<script src="//analytic.liulp.club/pv/pv.js" async="async"></script>
+
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+
+  
+    
+  
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="async" crossorigin="anonymous"
+    src="//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js">
+</script>
+
+
+
+
+
+<script src="https://hm.baidu.com/hm.js?6f3e9da4ef7b870d4268ab2e39f10108" async="async"></script>
+
+
+
+    
+    
+
+  </body>
+</html>
+

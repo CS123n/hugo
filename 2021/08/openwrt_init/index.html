@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.68.3 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="刘路平">
+<meta name="keywords" content="">
+<meta name="description" content="暑假回家终于用二手树莓派搭建起了Openwrt的软路由
+暑假回家终于用二手树莓派搭建起了Openwrt的软路由
+暑假回家终于用二手树莓派搭建起了Openwrt的软路由 Anyway，欢迎到访刘路平的主页！">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Access-Control-Allow-Origin" content="*">
+<meta http-equiv="expires" content="1200">
+
+<meta property="og:description" content="暑假回家终于用二手树莓派搭建起了Openwrt的软路由">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openwrt搭建">
+<meta name="twitter:title" content="Openwrt搭建">
+<meta property="og:url" content="https://www.liulp.club/2021/08/openwrt_init/">
+<meta property="twitter:url" content="https://www.liulp.club/2021/08/openwrt_init/">
+<meta property="og:site_name" content="刘路平的主页">
+<meta property="og:description" content="暑假回家终于用二手树莓派搭建起了Openwrt的软路由">
+<meta name="twitter:description" content="暑假回家终于用二手树莓派搭建起了Openwrt的软路由">
+<meta property="og:locale" content="zh-cn">
+
+  
+    <meta property="article:published_time" content="2021-08-03T15:51:03">
+  
+  
+    <meta property="article:modified_time" content="2022-03-25T18:22:21">
+  
+  
+  
+    
+      <meta property="article:section" content="博客">
+    
+  
+  
+    
+      <meta property="article:tag" content="技术">
+    
+      <meta property="article:tag" content="Wifi">
+    
+      <meta property="article:tag" content="Openwrt">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031559993.webp">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031559993.webp">
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031559995.webp">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031559995.webp">
+
+
+
+
+  <meta property="og:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg">
+  <meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg">
+
+
+    <title>Openwrt搭建  ➤  暑假回家终于用二手树莓派搭建起了Openwrt的软路由</title>
+    
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/show.ico">
+    
+    
+
+    <link rel="canonical" href="https://www.liulp.club/2021/08/openwrt_init/">
+    
+    
+    <link rel="stylesheet" media="all" href="//cdn.jsdelivr.net/gh/CS123n/website@master/css/web_style.min.css" />
+    <link rel="preload" media="all"  href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    
+    
+    
+
+    
+      
+    
+    
+
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://www.liulp.club/">刘路平的主页</a>
+  </div>
+  <div class="search header-right-icon">
+    <i class="material-icons search-icon search-start"><i class="fa fa-chevron-left"></i></i>
+    <input type="text" class="search-input" placeholder="搜索" />
+    <i class="material-icons search-icon search-clear"><i class="fa fa-chevron-right"></i></i>
+  <div class="search-results" id="searchout" ></div>
+  </div>
+
+</header>
+
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://www.liulp.club/#about">
+          <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg" alt="作者的图片" />
+        </a>
+        <h4 class="sidebar-profile-name">刘路平</h4>
+        
+          <h5 class="sidebar-profile-bio">我们必须知道，我们必将知道</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home "></i>
+      
+      <span class="sidebar-button-desc">首页</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/categories/%E5%8D%9A%E5%AE%A2">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-skyatlas "></i>
+      
+      <span class="sidebar-button-desc">博文</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/categories/%E6%97%A5%E8%AE%B0">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-calendar-minus-o "></i>
+      
+      <span class="sidebar-button-desc">日记</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">标签</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-user"></i>
+      
+      <span class="sidebar-button-desc">关于</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/liuluping0106" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="mailto:liuluping1119@gmail.com" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope"></i>
+      
+      <span class="sidebar-button-desc">Email</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://www.liulp.club/post/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+  <div class="post-header-cover
+              text-center
+              "
+       style="background-image:url('https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031559995.webp')"
+       data-behavior="5">
+    
+      <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      Openwrt搭建
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-08-03T15:51:03&#43;08:00">
+        
+  
+  
+  
+  
+    2021年八月3日  
+  
+
+      </time>
+    
+    
+  
+  
+    <span>发布在</span>
+    
+      <a class="category-link" href="https://www.liulp.club/categories/%e5%8d%9a%e5%ae%a2">博客</a>
+    
+  
+
+
+  </div>
+
+  <div class="post-meta">
+    <i><span id="jinrishici-sentence">
+      正在加载今日诗词...
+    </span></i>
+  </div>
+</div>
+    
+  </div>
+
+
+      <div id="main" data-behavior="5"
+        class="hasCover
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap" id="upper_ele">
+              <p>心心念念了好久，暑假回家终于用屯的二手树莓派搭建起了Openwrt的软路由。</p>
+<h2 id="table-of-contents">目录</h2><nav id="TableOfContents">
+  <ul>
+    <li><a href="#镜像安装">镜像安装</a></li>
+    <li><a href="#网络设置">网络设置</a>
+      <ul>
+        <li><a href="#网络拓扑">网络拓扑</a></li>
+        <li><a href="#dns服务配置">DNS服务配置</a></li>
+        <li><a href="#自定义域名">自定义域名</a></li>
+      </ul>
+    </li>
+    <li><a href="#内网穿透">内网穿透</a></li>
+  </ul>
+</nav>
+<h2 id="镜像安装">镜像安装</h2>
+<p>因为使用的是树莓派4b，网上有现成的为树莓派4b编译的镜像<code>OpenWrt-Rpi</code>，而且每天基于Github Action自动更新。然后将下好的镜像使用<code>balenaEtcher</code>烧录到SD卡内插入到树莓派中。有意思的是，重新烧录同样的镜像，树莓派是不会重新加载的，所以每次我重写镜像都需要换个镜像刷写，再刷回来以进行重置。</p>
+<ul>
+<li><a href="https://github.com/SuLingGG/OpenWrt-Rpi">OpenWrt-Rpi</a></li>
+<li><a href="https://www.balena.io/etcher/">balenaEtcher</a></li>
+</ul>
+<h2 id="网络设置">网络设置</h2>
+<p>因为是用树莓派做旁路由，所以需要对于网络进行一定的设置。主要是在主路由上设置网关和DNS服务器地址指向旁路由。在树莓派上修改ip地址到主路由的网段，并将网关改为主路由的ip地址。具体到我，我设定树莓派向外提供服务，譬如将默认DNS服务器指向旁路由，由旁路由运行Adguard Home提供DNS服务，进行广告过滤。但是并没有设置主路由网关指向旁路由，也就没有默认所有流量经过旁路由。</p>
+<ul>
+<li><a href="https://adguard.com/">Adguard Home</a></li>
+</ul>
+<h3 id="网络拓扑">网络拓扑</h3>
+<p>刷机成功后，连上树莓派的默认Wifi。首先要将旁路由的ip地址改到主路由网段：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">uci set network.lan.ipaddr<span style="color:#f92672">=</span>192.168.2.110
+uci commit network
+/etc/init.d/network restart
+</code></pre></div><p>然后就可以将树莓派插到主路由的LAN口上了，并通过刚刚设置的ip，对于我就是192.168.2.110，直接访问了。整个网络拓扑如下</p>
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif"
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032051849.webp class="lazyload" alt="未命名 刘路平的主页"/>
+</p>
+<h3 id="dns服务配置">DNS服务配置</h3>
+<p>由于我主路由本来运行着<code>SmartDNS</code>，我关闭了主路由的DNS服务，从主路由将DNS服务器直接设置为树莓派的ip。</p>
+<ul>
+<li><a href="https://github.com/pymumu/smartdns">SmartDNS</a></li>
+</ul>
+<p align="center">
+    <img src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif"
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108031647152.webp class="lazyload" alt="未命名 刘路平的主页"/>
+</p>
+<p>这里遇到的一个坑是，本来计划直接让Adguard Home接管53端口，但是出现了梯子用不了等网络的问题。最后还是选用将Adguard Home作为dnsmasq的上游服务器，可能这样其他服务也可以正常设置DNS服务，如修改dnsmasq配置。</p>
+<p>因为我家光猫不支持ipv6，所以我在旁路由DHCP/DNS和Adguard Home中分别禁止了ipv6解析，以便快速返回解析结果。</p>
+<h3 id="自定义域名">自定义域名</h3>
+<p>Adguard Home不仅仅可以用于拦截广告。可以通过Adguard Home自定义拦截规则，来设置自定义域名，譬如设置<a href="http://mywifi.org">mywifi.org</a>指向192.168.2.110，条目如下：</p>
+<pre><code>192.168.2.110 mywifi.org
+</code></pre><p>这里有一点，Openwrt会拦截指向内网的解析，需要关掉网络 $\to$ DHCP/DNS $\to$ 基本设置的重定向保护，解析才能生效。</p>
+<h2 id="内网穿透">内网穿透</h2>
+<p>因为有公网服务器，所以想把家里的局域网和公网服务器组网进行内网穿透。我使用的是<code>zerotier</code>这款开源软件。这款软件一定条件下可以实现点对点通信，突破公网服务器做内网穿透的带宽限制。因为zerotier的节点服务器都在国外，我在公网服务器上搭建了中转通信的moon服务器，加速访问。我还发现了一款好的<code>zerotier</code>第三方安卓客户端<code>ZerotierFix</code>，可以在安卓端方便地添加moon节点。</p>
+<ul>
+<li><a href="https://my.zerotier.com/">zerotier</a></li>
+<li><a href="https://imcm.xyz/linux-zerotier-moon/">zerotier moon</a></li>
+<li><a href="https://github.com/kaaass/ZerotierFix">ZerotierFix</a></li>
+</ul>
+<p>具体的整个zerotier的配置流程，强烈推荐b站up主“韩风Talk”的讲解视频</p>
+<div style="position: relative;">
+    <iframe class="biiframe" width= '100%' height='400'
+    src="//player.bilibili.com/player.html?bvid=BV1hT4y1E78k&page=1&as_wide=1&high_quality=1&danmaku=0" scrolling="no" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+</div>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">推荐文章</span><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2021/08/homeassistant/">Homeassistant</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2021/08/docker/">Docker配置</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2021/01/cors/">网站跨域设计</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a class="tag tag--primary tag--small" href="https://www.liulp.club/2020/08/m3u8/">远程下载视频成m3u8形式</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br>
+
+<span class="text-color-light text-small">标签</span><br/>
+
+  <a class="tag tag--primary tag--small" href="https://www.liulp.club/tags/%E6%8A%80%E6%9C%AF/">技术</a>
+
+  <a class="tag tag--primary tag--small" href="https://www.liulp.club/tags/wifi/">Wifi</a>
+
+  <a class="tag tag--primary tag--small" href="https://www.liulp.club/tags/openwrt/">Openwrt</a>
+
+
+
+
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/08/docker/" data-tooltip="Docker配置">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/02/freedom_and_education/" data-tooltip="论自由与教育">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.liulp.club/2021/08/openwrt_init/&title=Openwrt%e6%90%ad%e5%bb%ba&summary=%e6%9a%91%e5%81%87%e5%9b%9e%e5%ae%b6%e7%bb%88%e4%ba%8e%e7%94%a8%e4%ba%8c%e6%89%8b%e6%a0%91%e8%8e%93%e6%b4%be%e6%90%ad%e5%bb%ba%e8%b5%b7%e4%ba%86Openwrt%e7%9a%84%e8%bd%af%e8%b7%af%e7%94%b1">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.liulp.club/2021/08/openwrt_init/&title=Openwrt%e6%90%ad%e5%bb%ba&summary=%e6%9a%91%e5%81%87%e5%9b%9e%e5%ae%b6%e7%bb%88%e4%ba%8e%e7%94%a8%e4%ba%8c%e6%89%8b%e6%a0%91%e8%8e%93%e6%b4%be%e6%90%ad%e5%bb%ba%e8%b5%b7%e4%ba%86Openwrt%e7%9a%84%e8%bd%af%e8%b7%af%e7%94%b1">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?url=https://www.liulp.club/2021/08/openwrt_init/&title=Openwrt%e6%90%ad%e5%bb%ba&summary=%e6%9a%91%e5%81%87%e5%9b%9e%e5%ae%b6%e7%bb%88%e4%ba%8e%e7%94%a8%e4%ba%8c%e6%89%8b%e6%a0%91%e8%8e%93%e6%b4%be%e6%90%ad%e5%bb%ba%e8%b5%b7%e4%ba%86Openwrt%e7%9a%84%e8%bd%af%e8%b7%af%e7%94%b1">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#upper_ele">
+          <i class="fa fa-list-ul"></i>
+        
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  
+  
+
+  
+  
+  
+  <span class="copyrights">
+    &copy; 2022 刘路平 
+  </span> <i class="fa fa-coffee"></i> <a class="icp" rel="license noopener" href="https://beian.miit.gov.cn" target="_blank" style="color: #9eabb3;text-decoration:none">浙ICP备20029940号</a> • All Rights Reserved<br>
+  <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://gohugo.io" target="_blank"  title="由 Hugo 驱动" >
+    <span class="badge-subject">Powered</span><span class="badge-value bg-blue">Hugo</span></a>
+    </div>
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://github.com/kakawait/hugo-tranquilpeak-theme" target="_blank"  title="主题为 tranquilpeak" >
+    <span class="badge-subject">Theme</span><span class="badge-value bg-red">tranquilpeak</span></a>
+    </div>
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://www.jsdelivr.com/" target="_blank"  title="使用 jsdelivr's CDN">
+    <span class="badge-subject">CDN</span><span class="badge-value bg-brightgreen">&nbspjsDelivr</span></a>
+    </div>
+    
+    
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://tongji.baidu.com/" target="_blank"  title="使用 Matomo&Baidu">
+    <span class="badge-subject">Pv</span><span class="badge-value bg-orange" id='laout'>&nbsp</span></a>
+    </div>
+    <div class="github-badge">
+    <a style="color: #fff" rel="license noopener" href="https://github.com/CS123n/website" target="_blank"  title="运行在 GitHub＆Tencent" >
+    <span class="badge-subject">Survived</span><span class="badge-value bg-blueviolet" id="spantime">&nbsp</span></a>
+    </div>
+    </div>
+</footer>
+
+
+
+      </div>
+      <div id="mybottom">
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/08/docker/" data-tooltip="Docker配置">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">下一篇</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://www.liulp.club/2021/02/freedom_and_education/" data-tooltip="论自由与教育">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">上一篇</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.liulp.club/2021/08/openwrt_init/&title=Openwrt%e6%90%ad%e5%bb%ba&summary=%e6%9a%91%e5%81%87%e5%9b%9e%e5%ae%b6%e7%bb%88%e4%ba%8e%e7%94%a8%e4%ba%8c%e6%89%8b%e6%a0%91%e8%8e%93%e6%b4%be%e6%90%ad%e5%bb%ba%e8%b5%b7%e4%ba%86Openwrt%e7%9a%84%e8%bd%af%e8%b7%af%e7%94%b1">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.liulp.club/2021/08/openwrt_init/&title=Openwrt%e6%90%ad%e5%bb%ba&summary=%e6%9a%91%e5%81%87%e5%9b%9e%e5%ae%b6%e7%bb%88%e4%ba%8e%e7%94%a8%e4%ba%8c%e6%89%8b%e6%a0%91%e8%8e%93%e6%b4%be%e6%90%ad%e5%bb%ba%e8%b5%b7%e4%ba%86Openwrt%e7%9a%84%e8%bd%af%e8%b7%af%e7%94%b1">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="http://service.weibo.com/share/share.php?url=https://www.liulp.club/2021/08/openwrt_init/&title=Openwrt%e6%90%ad%e5%bb%ba&summary=%e6%9a%91%e5%81%87%e5%9b%9e%e5%ae%b6%e7%bb%88%e4%ba%8e%e7%94%a8%e4%ba%8c%e6%89%8b%e6%a0%91%e8%8e%93%e6%b4%be%e6%90%ad%e5%bb%ba%e8%b5%b7%e4%ba%86Openwrt%e7%9a%84%e8%bd%af%e8%b7%af%e7%94%b1">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#upper_ele">
+          <i class="fa fa-list-ul"></i>
+        
+        </a>
+      </li>
+    </ul>
+  
+</div>
+ 
+      </div>
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.liulp.club%2F2021%2F08%2Fopenwrt_init%2F">
+          <i class="fa fa-facebook-official"></i><span>分享到 Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https%3A%2F%2Fwww.liulp.club%2F2021%2F08%2Fopenwrt_init%2F">
+          <i class="fa fa-qq"></i><span>分享到 QQ空间</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="http://service.weibo.com/share/share.php?url=https%3A%2F%2Fwww.liulp.club%2F2021%2F08%2Fopenwrt_init%2F">
+          <i class="fa fa-weibo"></i><span>分享到 新浪微博</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-close"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032032803.jpg" alt="作者的图片" />
+    
+    <h4 id="about-card-name">刘路平</h4>
+    
+      <div id="about-card-bio">我们必须知道，我们必将知道</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        学生
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        浙江杭州
+      </div>
+    
+  </div>
+</div>
+
+    
+  
+    <div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20201008214241.jpeg');"></div>
+  
+
+
+    
+
+<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/jquery-lazyload@1.9.7/jquery.lazyload.min.js" async="async" crossorigin="anonymous"></script>
+<script data-pjax-viewer src="//cdn.jsdelivr.net/npm/viewerjs@1.9.0/dist/viewer.min.js" async="async" crossorigin="anonymous"></script>
+
+
+
+
+<script src="//cdn.jsdelivr.net/gh/CS123n/website@master/js/web_script.min.js" async="async" crossorigin="anonymous"></script>
+
+<script src="//analytic.liulp.club/pv/pv.js" async="async"></script>
+
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+
+  
+    
+  
+
+
+
+
+
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+  </script>
+  <script type="text/javascript" id="MathJax-script" async="async" crossorigin="anonymous"
+    src="//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js">
+</script>
+
+
+
+
+
+<script src="https://hm.baidu.com/hm.js?6f3e9da4ef7b870d4268ab2e39f10108" async="async"></script>
+
+
+
+    
+    
+
+  </body>
+</html>
+

@@ -1,0 +1,64 @@
+<rss version="2.0">
+<channel>
+
+<item>
+  <title>pdf.js与iframe</title>
+  <link>https://www.liulp.club/2020/08/pdf_iframe/</link>
+    <description>&lt;p&gt;网站解锁iframe方案&lt;/p&gt;
+&lt;p&gt;iframe，简直是扩展的first choice，各种GitHub上的轮子用起来不要太舒服，配合shortcode更佳欧！&lt;/p&gt;
+&lt;h2 id=&#34;pdfjs内嵌网页&#34;&gt;pdf.js内嵌网页&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pdfiframe&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.liulp.club/pdf/web/viewer.html?file=https://cdn.jsdelivr.net/gh/CS123n/source@master/document/{{.Get 0 }}.pdf&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;iframe class=&#34;pdfiframe&#34; width=&#34;100%&#34; height=&#34;100%&#34; frameborder=&#34;0&#34;
+    src=&#34;https://alist.liulp.club/pdf/web/viewer.html?file=https://alist.liulp.club/d/Alidrive/Website/document/Terence_Tao_Analysis_I.pdf&#34; &gt;
+&lt;/iframe&gt;
+&lt;h2 id=&#34;epubjs内嵌网页&#34;&gt;epub.js内嵌网页&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;epubiframe&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;allowfullscreen&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.liulp.club/epub/index.html?bookPath=https://cdn.jsdelivr.net/gh/CS123n/source@master/document/{{.Get 0 }}.epub&amp;#34;&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;iframe class=&#34;epubiframe&#34; width=&#34;100%&#34; height=&#34;600&#34; allowfullscreen=&#34;true&#34; frameborder=&#34;0&#34;
+    src=&#34;https://alist.liulp.club/epub/reader/?bookPath=https://alist.liulp.club/d/Alidrive/Website/document/%e8%ae%ba%e7%be%8e%e5%9b%bd%e7%9a%84%e6%b0%91%e4%b8%bb.epub&#34;
+&gt;&lt;/iframe&gt;
+
+&lt;!-- ## MD5密文内嵌
+```html
+&lt;iframe id=&#34;md5iframe&#34;
+    src=&#34;https://www.liulp.club/md5/decode.html?txt={{.Get 0 }}&#34;
+    width=&#34;100%&#34; height=&#34;300&#34; frameborder=&#34;0&#34;&gt;
+&lt;/iframe&gt;
+```
+
+&lt;iframe id=&#34;md5iframe&#34;
+    src=&#34;https://www.liulp.club/md5/decode.html?txt=prose_a&#34;
+    width=&#34;100%&#34; height=&#34;300&#34; frameborder=&#34;0&#34; &gt;
+&lt;/iframe&gt; --&gt;
+&lt;!-- ## pdfobject方法
+此方法无法适配手机浏览器
+```html
+&lt;object id= &#34;pdfcontainer&#34; data=&#39;&#39; 
+    type=&#39;application/pdf&#39; 
+    width=&#39;100%&#39; 
+    height=&#39;600px&#39;&gt;
+&lt;/object&gt;
+```
+&lt;object id= &#34;pdfcontainer&#34; data=&#39;https://cdn.jsdelivr.net/gh/CS123n/source@master/document/Terence_Tao_Analysis_I.pdf&#39; 
+    type=&#39;application/pdf&#39; 
+    width=&#39;100%&#39; 
+    height=&#39;600px&#39;&gt;
+&lt;/object&gt;
+ &lt;script&gt;
+    var ele = document.getElementById(&#39;pdfcontainer&#39;);
+    var he=Math.min(window.screen.availHeight*0.85, ele.offsetWidth*1.6);
+    ele.height = he;
+&lt;/script&gt; --&gt;&lt;blockquote&gt;
+&lt;/blockquote&gt;</description>
+  <pubDate>Sun, 02 Aug 2020 14:16:19 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/08/pdf_iframe/</guid>
+</item>
+
+</channel>
+</rss>

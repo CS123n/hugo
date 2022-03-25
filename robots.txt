@@ -1,0 +1,4 @@
+# robots.txt used by https://www.liulp.club
+User-agent: *
+
+Sitemap: https://www.liulp.club/sitemap.xml

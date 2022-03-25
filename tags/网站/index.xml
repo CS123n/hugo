@@ -1,0 +1,241 @@
+<rss version="2.0">
+<channel>
+
+<item>
+  <title>服务器配置相关</title>
+  <link>https://www.liulp.club/2020/08/baota/</link>
+    <description>&lt;p&gt;阿里云服务器启用宝塔面板，配合静态和php搭建各种网站。&lt;/p&gt;
+&lt;p&gt;本文记录我在阿里云和vultr的两台服务器的各种操作，这也是我独门的减压的方法吧。都挺好，就是越弄时间越少，压力越大啊。一直摸鱼可不会一直爽，咳咳。&lt;/p&gt;
+&lt;h2 id=&#34;我的网站&#34;&gt;我的网站&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://vultr.liulp.club&#34;&gt;PyOne&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://analytic.liulp.club&#34;&gt;Matomo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://aria.liulp.club&#34;&gt;Aria2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://short.liulp.club/&#34;&gt;Shlink&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;API:f98138fa-6afb-4d7e-9245-749e0787495d &lt;i class=&#34;fa fa-copy&#34; id=&#39;copyto&#39; onclick=&#34;copyapi()&#34; title=&#34;复制API到剪贴板&#34;&gt;&lt;/i&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://wekan.liulp.club/&#34;&gt;wekan&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://next.liulp.club/&#34;&gt;Nextcloud&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://drive.liulp.club/&#34;&gt;Onemanager&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://img.liulp.club/&#34;&gt;Chevereto&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://baota.liulp.club&#34;&gt;宝塔面板&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;当然，我是不会告诉你怎么进入我的后台的，哈哈&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;技术博客&#34;&gt;技术博客&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.aliyun.com/ask/233242?spm=a2c6h.13524658&#34;&gt;宝塔初始化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/gelandesprung/p/12019157.html&#34;&gt;Docker文件操作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://www.daniao.org/7523.html&#34;&gt;安装Matomo&lt;/a&gt;&lt;/del&gt;
+&lt;ul&gt;
+&lt;li&gt;对于依赖版本要求非常准确，对最新版适配欠缺&lt;/li&gt;
+&lt;li&gt;需要进如Docker内部开启https&lt;/li&gt;
+&lt;li&gt;不支持默认中文目录&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://matomo.org/docs/installation/#start-the-installation&#34;&gt;安装官方matomo&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;官方的真的简洁又好用！！！还能正常连接数据库！！！&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/799/&#34;&gt;安装PyOne&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;Docker版是阉割版&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/806/&#34;&gt;一键安装脚本&lt;/a&gt;非常好用，建议可以弄单独的服务器运行&lt;/li&gt;
+&lt;li&gt;Caddy运行失败，使用&lt;a href=&#34;https://www.moerats.com/archives/409/&#34;&gt;Caddy安装脚本&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/750/&#34;&gt;安装Aria2&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;配合图形界面和上传工具使用更佳&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://www.moerats.com/archives/956/&#34;&gt;安装lstu短链&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://shlink.io/documentation/&#34;&gt;安装shlink短链&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;直接使用Docker安装，官方配套web控制台&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.azimiao.com/5503.html&#34;&gt;安装wekan看板&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;穿透要挂到内网里，使用公网ip就是普通转代了……&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://nextcloud.com/install/#&#34;&gt;安装Nextcloud&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;用心的&lt;a href=&#34;https://www.jianshu.com/p/4fd537c80d87&#34;&gt;配置优化&lt;/a&gt;教程&lt;/li&gt;
+&lt;li&gt;Owncloud安卓端居然收费，直接用Nextcloud&lt;/li&gt;
+&lt;li&gt;Nextcloud的插件好动心啊，可惜加载太慢，存在问题&lt;/li&gt;
+&lt;li&gt;Nextcloud还支持webdav，一直想用，可惜国内支持的软件有限&lt;/li&gt;
+&lt;li&gt;Nextcloud的插件生态简直了，都是什么神仙配置！！！爱了&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.moerats.com/archives/1006/&#34;&gt;Onedrive离线下载&lt;/a&gt;，无UI版
+&lt;ul&gt;
+&lt;li&gt;使用此插件加上&lt;a href=&#34;http://www.jsoo.cc/82019223.html&#34;&gt;aria2&lt;/a&gt;，实现离线下载&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.liuxinggang.com/archives/gethook_hexo_vps.html&#34;&gt;博客服务器自动部署&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;script&gt;
+    function copyapi(){
+        var clipBoardContent=&#34;78e166d6-7fcb-4ac5-b1a2-57e992a1bc28&#34;;
+        if(window.clipboardData){
+            window.clipboardData.setData(&#39;text&#39;,clipBoardContent);
+        }else{
+            (function(clipBoardContent){
+                document.oncopy=function(e){
+                    e.clipboardData.setData(&#39;text&#39;,clipBoardContent);
+                    e.preventDefault();
+                    document.oncopy=null;
+                }
+            })(clipBoardContent);
+            document.execCommand(&#39;Copy&#39;);
+        }
+        alert(&#39;成功复制API到剪贴板&#39;);
+    };
+&lt;/script&gt;</description>
+  <pubDate>Thu, 13 Aug 2020 10:26:36 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/08/baota/</guid>
+</item>
+
+<item>
+  <title>Hugo短命令</title>
+  <link>https://www.liulp.club/2020/07/hugo/</link>
+    <description>&lt;p&gt;Hugo短命令实现Bilibili视频自适应屏幕啦。Hugo短命令真的强大丰富且便捷。&lt;/p&gt;
+&lt;h2 id=&#34;技术站点&#34;&gt;技术站点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://bestzuo.cn/posts/blog-bilbli.html&#34;&gt;自适应大小&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/u013842501/article/details/105660616/&#34;&gt;Hugo 短命令&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jianshu.com/p/94d76eced8c2&#34;&gt;video 加字幕&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://atelier.u-sub.net/srt2vtt/&#34;&gt;srt2vtt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;视频效果&#34;&gt;视频效果&lt;/h2&gt;
+&lt;div style=&#34;position: relative;&#34;&gt;
+    &lt;iframe class=&#34;biiframe&#34; width= &#39;100%&#39; height=&#39;400&#39;
+    src=&#34;//player.bilibili.com/player.html?bvid=BV14z411i78Q&amp;page=1&amp;as_wide=1&amp;high_quality=1&amp;danmaku=0&#34; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&#34;代码&#34;&gt;代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;position: relative; padding: 32% 45%;&amp;#34;&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;position: absolute; width: 100%; height: 100%; left: 0; top: 0;&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;//player.bilibili.com/player.html?bvid={{.Get 0 }}&amp;amp;page={{ if .Get 1 }}{{.Get 1}}{{ else }}1{{end}}&amp;amp;as_wide=1&amp;amp;high_quality=1&amp;amp;danmaku=1&amp;#34;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;scrolling&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;no&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;frameborder&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;no&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;framespacing&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;allowfullscreen&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;网盘视频&#34;&gt;网盘视频&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;video&amp;gt;&lt;/code&gt;标签支持网盘视频和字幕&lt;/li&gt;
+&lt;li&gt;腾讯云开启CORS&lt;/li&gt;
+&lt;li&gt;加载video.js插件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;效果&#34;&gt;效果&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;MP4&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?2020%ef%bc%8c%e5%83%8f%e4%b8%80%e5%9c%ba%e7%94%b5%e5%bd%b1.mp4&amp;mp4&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;FLV&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?%e5%86%b0%e5%86%b0-%e6%88%91%e7%9a%84%e8%a1%8c%e6%9d%8e%e7%ae%b1.flv&amp;flv&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HLS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;iframe class=&#34;videoiframe&#34; width= &#39;100%&#39; height=&#39;400&#39; scrolling=&#34;no&#34; frameborder=&#34;no&#34; framespacing=&#34;0&#34; allowfullscreen=&#34;true&#34; 
+    src=&#34;https://alist.liulp.club/video/?%e9%bb%91%e7%a5%9e%e8%af%9d%e6%82%9f%e7%a9%ba&amp;m3u8&#34;&gt;
+&lt;/iframe&gt;&lt;/p&gt;
+&lt;h3 id=&#34;代码-1&#34;&gt;代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&amp;lt;&lt;span style=&#34;color:#a6e22e&#34;&gt;video&lt;/span&gt;
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;class&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;video-js vjs-big-play-centered vjs-fluid&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;controls&lt;/span&gt;
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;preload&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;auto&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;poster&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/UwOm5D.jpg&amp;#34;&lt;/span&gt;
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;setup&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;{}&amp;#34;&lt;/span&gt; &amp;gt;
+   &amp;lt;&lt;span style=&#34;color:#a6e22e&#34;&gt;source&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;={{.&lt;span style=&#34;color:#a6e22e&#34;&gt;Get&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; }} &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;video/mp4&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&amp;gt;
+   {{ &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; .&lt;span style=&#34;color:#a6e22e&#34;&gt;Get&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; }}&amp;lt;&lt;span style=&#34;color:#a6e22e&#34;&gt;track&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;={{.&lt;span style=&#34;color:#a6e22e&#34;&gt;Get&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; }} &lt;span style=&#34;color:#a6e22e&#34;&gt;srclang&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;By Mydrive&amp;#34;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;kind&lt;/span&gt;=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;subtitles&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt;&amp;gt;
+   {{ &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; }}{{&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;}}
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;video&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;pdf效果&#34;&gt;PDF效果&lt;/h2&gt;
+&lt;iframe class=&#34;pdfiframe&#34; width=&#34;100%&#34; height=&#34;100%&#34; frameborder=&#34;0&#34;
+    src=&#34;https://alist.liulp.club/pdf/web/viewer.html?file=https://alist.liulp.club/d/Alidrive/Website/document/Terence_Tao_Analysis_I.pdf&#34; &gt;
+&lt;/iframe&gt;
+&lt;h3 id=&#34;代码-2&#34;&gt;代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pdfiframe&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;width&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100%&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;frameborder&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;https://www.liulp.club/pdf/web/viewer.html?file=https://cdn.jsdelivr.net/gh/CS123n/source@master/document/{{.Get 0 }}.pdf&amp;#34;&lt;/span&gt; &amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;iframe&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;问卷效果&#34;&gt;问卷效果&lt;/h2&gt;
+&lt;script type=&#39;text/javascript&#39; src=&#39;https://www.wjx.cn/handler/jqemed.ashx?activity=84948988&amp;width=700&amp;source=iframe&#39;&gt;&lt;/script&gt;
+&lt;h3 id=&#34;代码-3&#34;&gt;代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;text/javascript&amp;#39;&lt;/span&gt; 
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;https://www.wjx.cn/handler/jqemed.ashx?activity={{.Get 0 }}&amp;amp;width=700&amp;amp;source=iframe&amp;#39;&lt;/span&gt;&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+  <pubDate>Sat, 11 Jul 2020 08:44:41 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/07/hugo/</guid>
+</item>
+
+<item>
+  <title>网站搭建记录</title>
+  <link>https://www.liulp.club/2020/07/build_web/</link>
+    <description>&lt;p&gt;搭建网站需要的技术记录&lt;/p&gt;
+&lt;h2 id=&#34;资源站点&#34;&gt;资源站点&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;del&gt;&lt;a href=&#34;https://sbimg.cn/&#34;&gt;公益图床&lt;/a&gt;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://imgchr.com/liuyouyou&#34;&gt;路过图床&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://pngimg.com/&#34;&gt;抠图素材&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.pexels.com/zh-cn/&#34;&gt;Pexels图片&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://pixabay.com/zh/illustrations/&#34;&gt;Pixabay插画&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://unsplash.com/&#34;&gt;Upslpash图片&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.iconfont.cn/&#34;&gt;阿里矢量图&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;技术博客&#34;&gt;技术博客&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jianshu.com/p/68da4f350d97&#34;&gt;Hugo for windows&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/liuweixiao520/article/details/78971221&#34;&gt;git推送设置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cungudafa.top/post/3af9.html&#34;&gt;今日诗词&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/yelllowcong/article/details/77663442&#34;&gt;git关闭右键菜单&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.feiniaomy.com/post/456.html&#34;&gt;添加网站运行天数&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/zhixingwu/article/details/104393647&#34;&gt;FA5使用方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/qq_36759224/article/details/98058240&#34;&gt;jsDelivr图床&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/137795279&#34;&gt;jsDelivr使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/weixin_33813128/article/details/88588655&#34;&gt;百度SEO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://knightyun.github.io/2019/03/04/articles-search&#34;&gt;站内搜索&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;官方网站&#34;&gt;官方网站&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jinrishici.com/&#34;&gt;今日诗词&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://fa5.dashgame.com/#/&#34;&gt;Fontawesome&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://busuanzi.ibruce.info/&#34;&gt;不蒜子&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tinypng.com/&#34;&gt;熊猫压缩&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.staticfile.org/&#34;&gt;staticfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jsdelivr.com/&#34;&gt;jsdelivr&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;常用特殊符号&#34;&gt;常用特殊符号&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;常用排版 : ▌▍◆★☆☁➤➜❤➊➋➌&lt;/li&gt;
+&lt;li&gt;TodoList : ✅☑✓✔√☓☒✘ㄨ✕✖✗❌❎&lt;/li&gt;
+&lt;li&gt;emoji : 🌹🍀🌙🍂🍃🌷💎🔥⭐🍄🏆&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;计划完善&#34;&gt;计划完善&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;看板娘&lt;/li&gt;
+&lt;li&gt;动态背景&lt;/li&gt;
+&lt;li&gt;伸缩式目录&lt;/li&gt;
+&lt;/ul&gt;</description>
+  <pubDate>Thu, 09 Jul 2020 12:54:26 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2020/07/build_web/</guid>
+</item>
+
+</channel>
+</rss>

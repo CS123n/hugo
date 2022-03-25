@@ -1,0 +1,218 @@
+<rss version="2.0">
+<channel>
+
+<item>
+  <title>自然语言处理</title>
+  <link>https://www.liulp.club/2021/12/nlp_python/</link>
+    <description>&lt;!--toc--&gt;
+&lt;h2 id=&#34;基础知识&#34;&gt;基础知识&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;特高频特低频词都不能用于分析语言风格&lt;/li&gt;
+&lt;li&gt;高频长词，连词搭配可以分析风格&lt;/li&gt;
+&lt;li&gt;语言理解技术：词义消歧，指代消歧&lt;/li&gt;
+&lt;li&gt;语言理解应用：机器翻译（MT），含义识别（RTE）&lt;/li&gt;
+&lt;li&gt;nltk.Text():
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;方法&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;作用&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;Text(words)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;对象构造&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;concordance(word, width=79, lines=25)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示word出现的上下文&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;common_contexts(words)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示words出现的相同模式&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;similar(word)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示word的相似词&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;collocations(num=20, window_size=2)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;显示最常见的二词搭配&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;count(word)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;word出现的词数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;dispersion_plot(words)&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;绘制words中文档中出现的位置图&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;vocab()&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;返回文章去重的词典&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;GB2312，Latin-2，UTF-8是对应Unicode的一部分&lt;/li&gt;
+&lt;li&gt;正则匹配：
+^ 匹配开始，$ 匹配结尾，? 前方可选，. 匹配任意1个，+ 前方一个或多个，* 前方零个或多个，{m,n} 至少重复m次不多于n次
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;操作符&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;行为&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;[abc]&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;匹配字符集合&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;ed|ing&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;匹配指定的字符串（析取）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;a(b|c)+&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;括号表示操作符的范围&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;辅音元音序列，从中可以看出s和t后元音的分布几乎是互补的：
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;center&#34;&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;a&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;e&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;i&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;o&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;u&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;s&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;100&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td align=&#34;center&#34;&gt;t&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;47&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;148&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;37&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;li&gt;词干提取：lying -&amp;gt; lie （会产生非词）；词形归并：women -&amp;gt; woman；非标准词：数字、缩写、日期&lt;/li&gt;
+&lt;li&gt;正则简写：[a-zA-Z0-9_] = \w、[ \t\n] = \s&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;词性标注&#34;&gt;词性标注&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;词性标记集：adj，adv，cnj连词，det限定词 ……&lt;/li&gt;
+&lt;li&gt;使用out of vocabulary (UNK)替换超出词汇&lt;/li&gt;
+&lt;li&gt;简单词性标注：默认标注 &amp;lt;- 正则标注 &amp;lt;- 查询标注&lt;/li&gt;
+&lt;li&gt;一个语料库出现的新词大多数是名词，且一个语料库中最多的往往也是名词，所以一般将名词作为默认值&lt;/li&gt;
+&lt;li&gt;频率标注：1-gram unigram、2-gram bigram、3-gram trigram，n-gram标注器中n大于3时，面临数据稀疏问题&lt;/li&gt;
+&lt;li&gt;为了防止多词查询跨句，在句子开始处加None&lt;/li&gt;
+&lt;li&gt;标注策略失败要回退上级策略，直至默认标注&lt;/li&gt;
+&lt;li&gt;给定当前单词及其前两个标记，在约5%的情况中，有一个以上的标记分配给当前词&lt;/li&gt;
+&lt;li&gt;修正标注（Brill）：基于规则不断修正&lt;/li&gt;
+&lt;li&gt;语言学家使用形态学、句法和语义线索确定一个词的类别&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;文本分类&#34;&gt;文本分类&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;训练数据分为：train、dev-test、test三部分&lt;/li&gt;
+&lt;li&gt;最大熵马尔可夫模型和线性链条件随机场模型&lt;/li&gt;
+&lt;li&gt;任务：姓名性别识别，对话行为分类，句子分割，文本蕴含判断&lt;/li&gt;
+&lt;li&gt;精确度= true &amp;amp; positive / positive，召回率 = true &amp;amp; positive / true&lt;/li&gt;
+&lt;li&gt;交叉验证：将原始语料分为N个子集（folds）。对于每一个折叠，我们使用除这个折叠中的数据外所有数据来训练模型，然后在这个折叠上测试模型&lt;/li&gt;
+&lt;li&gt;决策树：
+&lt;ul&gt;
+&lt;li&gt;信息增益：得到某个信息后熵的减少&lt;/li&gt;
+&lt;li&gt;底层节点样本太少：设置停止阈值 or 对低性能节点进行裁剪&lt;/li&gt;
+&lt;li&gt;特征按照顺序处理，难以处理相互独立多特征的情况&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;朴素贝叶斯：
+&lt;ul&gt;
+&lt;li&gt;假设：特征相互独立&lt;/li&gt;
+&lt;li&gt;零计数和平滑：对于未出现、低频率的分类进行平滑，提升重要性&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;最大熵分类：
+&lt;ul&gt;
+&lt;li&gt;假设：满足所有约束条件，分布越平均熵越大越好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;信息提取&#34;&gt;信息提取&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;名词短语分块（NP-chunking）：
+&lt;ul&gt;
+&lt;li&gt;可选的跟着任意数目形容词（JJ）的限定词（DT）和名词（NN）组成&lt;/li&gt;
+&lt;li&gt;IOB标记：I（inside），O（outside）或Ｂ（begin）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/1638333240403np-chunking.png class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VP分块，如has already delivered；PP分块，如because of&lt;/li&gt;
+&lt;li&gt;命名实体识别：组织，人，地点，日期，货币，设施，地缘政治实体&lt;/li&gt;
+&lt;li&gt;有了明确的命名实体就可以进行关系抽取&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;句子结构&#34;&gt;句子结构&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;歧义句子：While hunting in Africa, &lt;strong&gt;I shot an elephant in my pajamas.&lt;/strong&gt; How an elephant got into my pajamas I’ll never know.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/1638333151590ambiguous.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;and不能连接NP和AP，e.g., It is the worst part and clumsy looking.&lt;/li&gt;
+&lt;li&gt;解析器：下降递归分析、移进-归约分析、左角落分析（带自下而上过滤的自上而下的方法）、图表分析（动态规划）&lt;/li&gt;
+&lt;li&gt;左角落分析：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/1638333218583left-corner_table.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;图表分析（动态规划）：
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; tokens &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;I shot an elephant in my pajamas&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;split()
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; wfst0 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; init_wfst(tokens, groucho_grammar)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; wfst1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; complete_wfst(wfst0, tokens, groucho_grammar)
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&amp;gt;&lt;/span&gt; display(wfst1, tokens)
+WFST  &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;   &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;     &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;　   &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;　  NP   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   S　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   S
+&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   V　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　  VP　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　  VP
+&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   Det　  NP　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   N　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;
+&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   P　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　  PP
+&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　 Det　  NP
+&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;　   N
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;依存关系的表示：(shot I (elephant an (in (pajamas my))))、(shot I (elephant an) (in (pajamas my)))&lt;/li&gt;
+&lt;li&gt;动词及物or不及物称为动词的配价&lt;/li&gt;
+&lt;li&gt;随着句子的增长，歧义是爆炸式增长的。因此需要加权文法，即为每一个分叉分配概率，且加和为1&lt;/li&gt;
+&lt;/ul&gt;</description>
+  <pubDate>Wed, 01 Dec 2021 12:11:00 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/12/nlp_python/</guid>
+</item>
+
+</channel>
+</rss>

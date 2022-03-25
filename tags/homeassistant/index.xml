@@ -1,0 +1,436 @@
+<rss version="2.0">
+<channel>
+
+<item>
+  <title>Homeassistant</title>
+  <link>https://www.liulp.club/2021/08/homeassistant/</link>
+    <description>&lt;p&gt;在Openwrt上搭建Homeassistant，目标是实现低成本可扩展的智能家居系统。&lt;/p&gt;
+&lt;!--toc--&gt;
+&lt;h2 id=&#34;安装hacs&#34;&gt;安装Hacs&lt;/h2&gt;
+&lt;p&gt;因为Homeassistant的集成是需要审核通过的，很多开源的集成是没有加入的。所以推荐安装&lt;code&gt;Hacs&lt;/code&gt;，它拥有更大的集成市场。官方推荐的安装方法是直接进入容器，运行命令&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;wget -q -O - https://install.hacs.xyz | bash -
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;但是我的docker内的网络并不能正确访问外网。通过分析代码发现，可以直接在Homeassistant的外部目录下运行脚本安装，从而不需要进入容器。其中，需要添加Homeassistant的目录到脚本的目录声明中&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;declare -a paths&lt;span style=&#34;color:#f92672&#34;&gt;=(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/root/homeassistant/config&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我的是/root/homeassistant/config。设置好后直接运行脚本。重启Homeassistant之后，就可以在集成中搜索到&lt;code&gt;Hacs&lt;/code&gt;了。这里需要注意的是，它自带的Github api有次数限制，建议直接在configuration.yaml中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;hacs:
+    token: 自己申请的Github token
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;就可以避开这一限制了。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://hacs.xyz/&#34;&gt;Hacs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/settings/tokens&#34;&gt;Github token&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;彩云天气&#34;&gt;彩云天气&lt;/h3&gt;
+&lt;p&gt;我使用&lt;code&gt;Hacs&lt;/code&gt;添加了彩云天气的集成，彩云天气的api我早有申请，这次就直接用上了。彩云天气可以方便地根据经纬度坐标添加多地的天气预报，很符合我这种异地上学的人的需求。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://dashboard.caiyunapp.com/user/sign_in/&#34;&gt;彩云天气&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;小米云服务&#34;&gt;小米云服务&lt;/h3&gt;
+&lt;p&gt;在&lt;code&gt;Hacs&lt;/code&gt;的集成中，我还找到了一个有意思的小米云服务，小米手机开启手机找回功能后，就可以通过集成这个服务，来定位手机，可以说非常的方便，也免去了很多Homeassistant实现相同功能需要的权限申请。&lt;/p&gt;
+&lt;h3 id=&#34;百度地图&#34;&gt;百度地图&lt;/h3&gt;
+&lt;p&gt;虽然Homeassistant自带了地图组件，但是在国内地图信息实在是令人不敢恭维。所以，有人设计了使用百度地图替代官方地图的集成，这一集成我并没有在&lt;code&gt;Hacs&lt;/code&gt;中找到，建议直接从Github上下载安装到custom_components目录下。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/shaonianzhentan/ha_baidu_map&#34;&gt;ha_baidu_map&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;添加mqtt&#34;&gt;添加MQTT&lt;/h2&gt;
+&lt;p&gt;通过之前已经通过docker安装了MQTT服务器，我们直接在Homeassistant集成中添加MQTT服务，并输入对应的ip地址和端口，因为是内网服务，所以我就没有设置账户密码，直接留空。&lt;/p&gt;
+&lt;h2 id=&#34;编写nodemcu程序&#34;&gt;编写Nodemcu程序&lt;/h2&gt;
+&lt;p&gt;有了MQTT服务以后，就可以通过MQTT添加Nodemcu等esp8266开发板，实现低成本的智能家居方案。&lt;/p&gt;
+&lt;h3 id=&#34;温湿度计&#34;&gt;温湿度计&lt;/h3&gt;
+&lt;p&gt;我首先在一个Nodemcu开发板上连上了一个SHTC3温湿度传感器，效果如下。然后编写了代码，烧录入Nodemcu，完整代码见附录&lt;a href=&#34;#%E6%B8%A9%E6%B9%BF%E5%BA%A6%E8%AE%A1%E4%BB%A3%E7%A0%81&#34;&gt;1&lt;/a&gt;。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108041534836.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h3 id=&#34;红外遥控&#34;&gt;红外遥控&lt;/h3&gt;
+&lt;p&gt;另外，通过非常好用的&lt;code&gt;IRremoteESP8266&lt;/code&gt;这个库，我们可以方便地配置发射红外信号。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;通过对MQTT信号的读取和处理，实现了远程红外遥控器。具体涉及到信号的读取，将byte转化为string。&lt;/li&gt;
+&lt;li&gt;红外信号的发射，通过&lt;code&gt;IRremoteESP8266&lt;/code&gt;发射对应的红外信号，我家用的是格力的空调，对应可以使用&lt;code&gt;ir_Kelvinator&lt;/code&gt;库。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;完整代码见附录&lt;a href=&#34;#%E6%A0%BC%E5%8A%9B%E9%81%A5%E6%8E%A7%E5%99%A8%E4%BB%A3%E7%A0%81&#34;&gt;2&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;路由器&#34;&gt;路由器&lt;/h2&gt;
+&lt;p&gt;Homeassistant支持添加路由器监控，对于我使用的Openwrt的路由器，可以在路由器上安装luci-mod-rpc。然后在configuration.yaml添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;device_tracker:
+    - platform: luci
+        host: 172.17.0.1
+        username: 
+        password: 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启Homeassistant就可以看到路由器上的设备了。还可以通过配置known_devices.yaml文件，为对应的设备添加设备名称等等。&lt;/p&gt;
+&lt;h2 id=&#34;lovelace&#34;&gt;Lovelace&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Hacs&lt;/code&gt;不仅仅有丰富的集成，还提供了很多好卡的ui元素，我比较喜欢一款叫clear的主题。启用&lt;code&gt;Hacs&lt;/code&gt;中的主题需要在configuration.yaml添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;frontend:
+    themes: !include_dir_merge_named themes
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;另外，还可以通过 左边栏姓名 $\to$ 排序和隐藏侧边栏中的项目 来重新排列或隐藏左边栏的项目。&lt;/p&gt;
+&lt;p&gt;当当当当，最终的完整效果如下&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108041515009.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;附录&#34;&gt;附录&lt;/h2&gt;
+&lt;h3 id=&#34;温湿度计代码&#34;&gt;温湿度计代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;Arduino.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;SparkFun_SHTC3.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;#34;EspMQTTClient.h&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#define PIN_HONG 13
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define PIN_WEN 9
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+EspMQTTClient &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;(
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;RM2100&amp;#34;&lt;/span&gt;,          &lt;span style=&#34;color:#75715e&#34;&gt;// wifi名
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,                &lt;span style=&#34;color:#75715e&#34;&gt;// wifi密码
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.2.110&amp;#34;&lt;/span&gt;,   &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT Broker server ip
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,                &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT账户名
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;,                &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT密码
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mqtt01-aweoif&amp;#34;&lt;/span&gt;,   &lt;span style=&#34;color:#75715e&#34;&gt;// 设备自定义名
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#ae81ff&#34;&gt;1883&lt;/span&gt;               &lt;span style=&#34;color:#75715e&#34;&gt;// MQTT端口
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;);
+
+SHTC3 mySHTC3;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;float&lt;/span&gt; RH,T;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; temp[&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;empty&amp;#34;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setup&lt;/span&gt;() {
+  &lt;span style=&#34;color:#75715e&#34;&gt;// put your setup code here, to run once:
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  Serial.begin(&lt;span style=&#34;color:#ae81ff&#34;&gt;115200&lt;/span&gt;);
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt;(Serial &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; false){delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);};
+  
+  mySHTC3.begin();
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+
+  client.enableDebuggingMessages(); &lt;span style=&#34;color:#75715e&#34;&gt;// Enable debugging messages sent to serial output
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  client.enableHTTPWebUpdater(); &lt;span style=&#34;color:#75715e&#34;&gt;// Enable the web updater. User and password default to values of MQTTUsername and MQTTPassword. These can be overrited with enableHTTPWebUpdater(&amp;#34;user&amp;#34;, &amp;#34;password&amp;#34;).
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  client.enableLastWillMessage(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;TestClient/lastwill&amp;#34;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;I am going offline&amp;#34;&lt;/span&gt;);  &lt;span style=&#34;color:#75715e&#34;&gt;// You can activate the retain flag by setting the third parameter to true
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;loop&lt;/span&gt;() {
+  client.loop();
+&lt;span style=&#34;color:#75715e&#34;&gt;//  温湿度传感器
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(millis()&lt;span style=&#34;color:#f92672&#34;&gt;%&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;20000&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;){
+    SHTC3_Status_TypeDef result &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mySHTC3.update();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(mySHTC3.lastStatus &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; SHTC3_Status_Nominal)   &lt;span style=&#34;color:#75715e&#34;&gt;//判断SHTC3状态
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    {
+      RH &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mySHTC3.toPercent();   &lt;span style=&#34;color:#75715e&#34;&gt;//读取湿度数据                       
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      T &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; mySHTC3.toDegC();       &lt;span style=&#34;color:#75715e&#34;&gt;//读取温度数据   
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      Serial.print(RH);
+      Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  &amp;#34;&lt;/span&gt;);
+      Serial.println(T);      
+      snprintf(temp,&lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%.1f&amp;#34;&lt;/span&gt;,T);
+      client.publish(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/temp&amp;#34;&lt;/span&gt;,temp);
+      snprintf(temp,&lt;span style=&#34;color:#ae81ff&#34;&gt;11&lt;/span&gt;,&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%.1f&amp;#34;&lt;/span&gt;,RH);
+      client.publish(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/hum&amp;#34;&lt;/span&gt;,temp);           
+    }&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;{
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Update failed!&amp;#34;&lt;/span&gt;);
+    }
+  }
+  delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;格力遥控器代码&#34;&gt;格力遥控器代码&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-c++&#34; data-lang=&#34;c++&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;Arduino.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;IRremoteESP8266.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;IRsend.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;ir_Kelvinator.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;ESP8266WiFi.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;PubSubClient.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;uint16_t&lt;/span&gt; kIrLed &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// ESP8266 GPIO pin to use. Recommended: 4 (D2).
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;IRKelvinatorAC &lt;span style=&#34;color:#a6e22e&#34;&gt;ac&lt;/span&gt;(kIrLed);  &lt;span style=&#34;color:#75715e&#34;&gt;// Set the GPIO to be used for sending messages.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;// WiFi
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;ssid &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;      &lt;span style=&#34;color:#75715e&#34;&gt;// Enter your WiFi name
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;  &lt;span style=&#34;color:#75715e&#34;&gt;// Enter WiFi password
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;// MQTT Broker
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;mqtt_broker &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.2.110&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;mqtt_username &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;mqtt_password &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; client_id &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;clientId-gfdsgr&amp;#34;&lt;/span&gt;;  
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; mqtt_port &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1883&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic0 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setopen&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic1 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setmod&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic2 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/settemp&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic3 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setfan&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic4 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/setvert&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;topic5 &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;esp8266/sethori&amp;#34;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; setopen[&lt;span style=&#34;color:#ae81ff&#34;&gt;128&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;uint8_t&lt;/span&gt; setmod &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; kKelvinatorCool;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; settemp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;26&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; setfan &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+
+WiFiClient espClient;
+PubSubClient &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;(espClient);
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;setup&lt;/span&gt;() {
+  Serial.begin(&lt;span style=&#34;color:#ae81ff&#34;&gt;115200&lt;/span&gt;);
+  ac.begin();
+  delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+  
+  WiFi.begin(ssid, password);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (WiFi.status() &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; WL_CONNECTED) {
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Connecting to WiFi..&amp;#34;&lt;/span&gt;);
+  }
+  Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Connected to the WiFi network&amp;#34;&lt;/span&gt;);
+  &lt;span style=&#34;color:#75715e&#34;&gt;//connecting to a mqtt broker
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  client.setServer(mqtt_broker, mqtt_port);
+  client.setCallback(callback);
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Set up what we want to send. See ir_Kelvinator.cpp for all the options.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;// Most things default to off.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  ac.off();
+  ac.setFan(setfan);
+  ac.setMode(kKelvinatorCool);
+  ac.setTemp(settemp);
+  ac.setSwingVertical(true);
+  ac.setSwingHorizontal(true);
+  printState();
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;callback&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; topic, byte&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; payload, &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; length) {
+ 
+  Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Message arrived in topic: &amp;#34;&lt;/span&gt;);
+  Serial.println(topic);
+ 
+  Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Message:&amp;#34;&lt;/span&gt;);
+&lt;span style=&#34;color:#75715e&#34;&gt;//  for (int i = 0; i &amp;lt; length; i++) {
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//    Serial.print((char)payload[i]);
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;//  }
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;message &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;)payload;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (length &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;) {
+    length &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;;
+  };
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; dest[length] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;;
+  strncpy(dest, message, length);
+  Serial.println(dest);
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic3) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    setfan &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(dest);
+    ac.setFan(setfan);
+    printState();
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic2) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+    settemp &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; atoi(dest);
+    ac.setTemp(settemp);
+    printState();
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic1) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hea&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setMode(kKelvinatorHeat);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;coo&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.setMode(kKelvinatorCool);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;dry&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.setMode(kKelvinatorDry);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;aut&amp;#34;&lt;/span&gt;)&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.setMode(kKelvinatorAuto);
+    }
+    printState();
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic0) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      ac.on();
+      flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;off&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.off();
+      flag &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (flag &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+      printState();
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;500&lt;/span&gt;);
+      ac.send();
+      ac.off();
+    };
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic4) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingVertical(true);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;off&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingVertical(false);
+    };
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(topic, topic5) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;on&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingHorizontal(true);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (strcmp(dest, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;off&amp;#34;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;){
+      ac.setSwingHorizontal(false);
+    };
+  };
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;reconnect&lt;/span&gt;() {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;client.connected()) {
+    Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Attempting MQTT connection...&amp;#34;&lt;/span&gt;);
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Attempt to connect
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (client.connect(client_id, mqtt_username, mqtt_password)) {
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;connected&amp;#34;&lt;/span&gt;);
+      &lt;span style=&#34;color:#75715e&#34;&gt;// 连接成功时订阅主题
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      client.subscribe(topic0);
+      client.subscribe(topic1);
+      client.subscribe(topic2);
+      client.subscribe(topic3);
+      client.subscribe(topic4);
+      client.subscribe(topic5);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+      Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;failed, rc=&amp;#34;&lt;/span&gt;);
+      Serial.print(client.state());
+      Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34; try again in 5 seconds&amp;#34;&lt;/span&gt;);
+      &lt;span style=&#34;color:#75715e&#34;&gt;// Wait 5 seconds before retrying
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      delay(&lt;span style=&#34;color:#ae81ff&#34;&gt;5000&lt;/span&gt;);
+    }
+  }
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;printState&lt;/span&gt;() {
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Display the settings.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  Serial.println(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Kelvinator A/C remote is in the following state:&amp;#34;&lt;/span&gt;);
+  Serial.printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;  %s&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;\n&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&lt;/span&gt;, ac.toString().c_str());
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Display the encoded IR sequence.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;unsigned&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; ir_code &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; ac.getRaw();
+  Serial.print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;IR Code: 0x&amp;#34;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;uint8_t&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; kKelvinatorStateLength; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+    Serial.printf(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;%02X&amp;#34;&lt;/span&gt;, ir_code[i]);
+  Serial.println();
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;loop&lt;/span&gt;() {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;client.connected()) {
+    reconnect();
+  }
+  client.loop();
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+  <pubDate>Tue, 03 Aug 2021 19:25:15 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/08/homeassistant/</guid>
+</item>
+
+<item>
+  <title>Docker配置</title>
+  <link>https://www.liulp.club/2021/08/docker/</link>
+    <description>&lt;p&gt;Openwrt中有使用docker的需求，顺道学习一下docker的配置。&lt;/p&gt;
+&lt;h2 id=&#34;空间挂载&#34;&gt;空间挂载&lt;/h2&gt;
+&lt;p&gt;openwrt默认是/opt和/overlay共用空间，因为文件格式等问题，docker在这种情况下只能使用vfs储存模式，占用空间大且速度慢。为此，在openwrt中分别为overlay和docker的opt分别分配空间并格式化为ext4格式，然后把/overlay和/opt分别挂载在上面，这样docker就会自动使用更好更快的overlay2储存模式。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032101457.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;p&gt;另外，我还将一块移动硬盘挂载在/mnt/share，而且将它通过&lt;code&gt;Samba&lt;/code&gt;进行网络共享，共享下局域网传文件速度还是很可观的。&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032044324.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;
+&lt;h2 id=&#34;homeassistant&#34;&gt;Homeassistant&lt;/h2&gt;
+&lt;p&gt;首先是使用docker在openwrt中安装&lt;code&gt;Homeassistant&lt;/code&gt;，这样就可以本地搭建智能家居服务器。&lt;code&gt;Homeassistant&lt;/code&gt;使用&lt;code&gt;MQTT&lt;/code&gt;协议的通信服务，所以还搭建了一个基于&lt;code&gt;MQTT&lt;/code&gt;的开源服务器&lt;code&gt;Eclipse Mosquitto&lt;/code&gt;的docker。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.home-assistant.io/&#34;&gt;Homeassistant&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/MQTT&#34;&gt;MQTT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mosquitto.org/&#34;&gt;Eclipse Mosquitto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;mqtt&#34;&gt;MQTT&lt;/h3&gt;
+&lt;p&gt;首先设置配置文件&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mkdir -p /mosquitto/config
+mkdir -p /mosquitto/data
+mkdir -p /mosquitto/log
+nano /mosquitto/config/mosquitto.conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;并在mosquitto.conf中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;persistence true
+persistence_location /mosquitto/data
+log_dest file /mosquitto/log/mosquitto.log
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;如果需要使用密码，因为我只在局域网提供服务，就没有添加用户名密码。在mosquitto.conf中添加&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;allow_anonymous false
+password_file /mosquitto/pwfile
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然后在容器启动后运行命令，添加用户admin以及密码&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;mosquitto_passwd -c /mosquitto/pwfile admin
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;并授予目录权限&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;chmod -R &lt;span style=&#34;color:#ae81ff&#34;&gt;755&lt;/span&gt; /mosquitto
+chmode -R &lt;span style=&#34;color:#ae81ff&#34;&gt;777&lt;/span&gt; /mosquitto/log
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;完成以上准备后，启动容器&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mosquitto&amp;#34;&lt;/span&gt; --net&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;host &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mosquitto/data:/mosquitto/data &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mosquitto/log:/mosquitto/log &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    eclipse-mosquitto:1.6.14
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;要注意的是，一是最新版本的Eclipse Mosquitto 2无法被正常访问，所以建议使用1.6.14版本。二是在openwrt中的桥接模式，端口映射后被其他终端直接访问有问题，建议直接使用host模式，共享网络。&lt;/p&gt;
+&lt;h3 id=&#34;homeassistant-1&#34;&gt;Homeassistant&lt;/h3&gt;
+&lt;p&gt;接下来运行Homeassistant&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;home-assistants&amp;#34;&lt;/span&gt; -p 8123:8123 &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /root/homeassistant/config:/config &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /mnt/share:/mnt/share &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    homeassistant/home-assistant
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;除了将配置文件进行映射，我还将我的分享目录进行了映射，这样就可以通过&lt;code&gt;Homeassistant&lt;/code&gt;直接访问分享目录下的影视资源。&lt;/p&gt;
+&lt;h2 id=&#34;nginxphp&#34;&gt;Nginx+PHP&lt;/h2&gt;
+&lt;p&gt;为了为局域网添加Speedtest。刚开始打算直接添加Speedtest的docker，可惜出现了架构不兼容的问题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;WARNING: The requested image&#39;s platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;为此，我决定曲线救国，使用docker搭建web服务器。开始打算使用集成好的docker镜像，最后还是决定使用docker-compose的方案。分别安装nginx和php的官方docker镜像，这两个镜像都没有架构兼容性问题。&lt;/p&gt;
+&lt;p&gt;首先安装php&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;web-php&amp;#34;&lt;/span&gt; -p 9000:9000 &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /root/nginx/webroot:/usr/share/nginx/html &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    php:7.2-fpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其次添加nginx的配置文件conf.d&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name localhost;
+
+    index index.php index.html;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    root /var/www/html;
+
+    set $virtualdir &amp;quot;&amp;quot;;
+    set $realdir &amp;quot;&amp;quot;;
+
+    if ($request_uri ~ ^/([^/]*)/.*$ ) {
+        set $virtualdir /$1;
+    }
+
+    if (-d &amp;quot;$document_root$virtualdir&amp;quot;) {
+        set $realdir &amp;quot;${virtualdir}&amp;quot;;
+    }
+
+    location / {
+        try_files $uri $uri/ $realdir/index.php?$args;
+    }
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 192.168.2.110:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中，文件路径为/root/nginx/webroot。并且将&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fastcgi_pass 192.168.2.110:9000;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;中的地址修改为php的运行位置。建议不要用桥接的地址，因为我发现每次重启后，桥接地址是可能发生变换的，建议端口映射后，直接使用局域网地址。&lt;/p&gt;
+&lt;p&gt;然后运行nginx&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;docker run -d --name&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;web-nginx&amp;#34;&lt;/span&gt; -p 8088:80 &lt;span style=&#34;color:#ae81ff&#34;&gt;\&lt;/span&gt;
+    -v /root/nginx/conf.d:/etc/nginx/conf.d
+    -v /root/nginx/webroot:/usr/share/nginx/html
+    nginx:latest
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;有个问题是，8080端口不能正常使用，建议使用自定义端口，譬如我用的8088端口。&lt;/p&gt;
+&lt;h3 id=&#34;speedtest&#34;&gt;Speedtest&lt;/h3&gt;
+&lt;p&gt;成功运行后，在文件目录，我的是/root/nginx/webroot，添加Speedtest的网站文件。并将example-singleServer-full.html重命名为默认文件index.html。然后就可以直接访问对应的网址测速了，我的是&lt;a href=&#34;http://192.168.2.110:8088/speedtest/&#34;&gt;192.168.2.110:8088/speedtest/&lt;/a&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/librespeed/speedtest&#34;&gt;Speedtest&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当当当当，最终的测速效果如下&lt;/p&gt;
+&lt;p align=&#34;center&#34;&gt;
+    &lt;img src=&#34;https://cdn.jsdelivr.net/gh/CS123n/source@master/image/20200808091550.gif&#34;
+    data-original=https://cdn.jsdelivr.net/gh/CS123n/source@master/image/202108032017072.webp class=&#34;lazyload&#34; alt=&#34;未命名 刘路平的主页&#34;/&gt;
+&lt;/p&gt;</description>
+  <pubDate>Tue, 03 Aug 2021 17:46:55 +0800</pubDate>
+  
+  <guid>https://www.liulp.club/2021/08/docker/</guid>
+</item>
+
+</channel>
+</rss>
