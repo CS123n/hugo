@@ -38,7 +38,7 @@ if (xhr.readyState == 4 && xhr.status == 200) {
 }
 
 // 开始获取根目录下 feed.xml 文件内的数据
-xhr.open('get', 'https://cdn.jsdelivr.net/combine/gh/CS123n/blog.github.io/post/index.xml', true);
+xhr.open('get', 'https://cdn.jsdelivr.net/combine/gh/CS123n/hugo.github.io/post/index.xml', true);
 xhr.send();
 
 searchBtn.onclick = function(){

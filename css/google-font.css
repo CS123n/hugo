@@ -24,12 +24,12 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Merriweather Regular'), local('Merriweather-Regular'), url(https://cdn.jsdelivr.net/gh/CS123n/blog@master/font/u-440qyriQwlOrhSvowK_l5OeA.woff) format('woff');
+  src: local('Merriweather Regular'), local('Merriweather-Regular'), url(https://cdn.jsdelivr.net/gh/CS123n/hugo@master/font/u-440qyriQwlOrhSvowK_l5OeA.woff) format('woff');
 }
 @font-face {
   font-family: 'Merriweather';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: local('Merriweather Bold'), local('Merriweather-Bold'), url(https://cdn.jsdelivr.net/gh/CS123n/blog@master/font/u-4n0qyriQwlOrhSvowK_l52xwNpXA.woff) format('woff');
+  src: local('Merriweather Bold'), local('Merriweather-Bold'), url(https://cdn.jsdelivr.net/gh/CS123n/hugo@master/font/u-4n0qyriQwlOrhSvowK_l52xwNpXA.woff) format('woff');
 }
